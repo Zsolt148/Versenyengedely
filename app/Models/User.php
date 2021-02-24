@@ -10,7 +10,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
     use HasFactory;
@@ -29,6 +29,7 @@ class User extends Authenticatable
         'password',
         'type', // user - organizer - coach - admin - super
         'wannabe',
+        'mandate',
         'teams_id'
     ];
 
@@ -76,6 +77,10 @@ class User extends Authenticatable
 
     public function address() {
         return $this->hasOne(Address::class, 'teams_id', 'teams_id');
+    }
+
+    public function payments() {
+        return $this->hasMany(Payment::class, 'users_id');
     }
 
     const TYPES = [

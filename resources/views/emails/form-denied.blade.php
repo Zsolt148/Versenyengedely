@@ -6,7 +6,7 @@ Sajnálattal közöljük, hogy a {{ $form->title }} {{ $form->vnev }} {{ $form->
 <p>{{ $form->deny }}</p>
 
 @component('mail::button', ['url' => $url])
-Versenyengedély kérelmek
+Versenyengedélykérelmek
 @endcomponent
 
 Üdvözlettel,<br>

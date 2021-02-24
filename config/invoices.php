@@ -79,10 +79,10 @@ return [
          */
         'attributes' => [
             'name'          => 'Magyar Szenior Úszók Órszágos Szövetsége',
-            'address'       => '89982 Budapest',
-            'code'          => '41-1985581',
-            'vat'           => '123456789',
-            'phone'         => '760-355-3930',
+            'address'       => '1027 Budapest, Vitéz utca 5-7. I.em.2',
+            'code'          => '18392009-1-41',
+            'vat'           => '',
+            'phone'         => '',
             'custom_fields' => [
                 /**
                  * Custom attributes for Seller::class
@@ -90,7 +90,6 @@ return [
                  * Used to display additional info on Seller section in invoice
                  * attribute => value
                  */
-                'SWIFT' => 'BANK101',
             ],
         ],
     ],

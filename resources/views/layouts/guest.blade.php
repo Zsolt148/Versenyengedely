@@ -31,20 +31,22 @@
 
                         <!-- Navigation Links -->
                         <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                            <x-jet-nav-link href="{{ url('/') }}" :active="false">
+                            <x-jet-nav-link href="{{ url('/') }}" :active="request()->routeIs('verification.notice')">
                                 Kezdőlap
                             </x-jet-nav-link>
                         </div>
                     </div>
 
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                        <x-jet-nav-link href="{{ route('login') }}" :active="request()->routeIs('login')">
-                            Bejelentkezés
-                        </x-jet-nav-link>
-                        <x-jet-nav-link href="{{ route('register')  }}" :active="request()->routeIs('register')">
-                            Regisztráció
-                        </x-jet-nav-link>
-                    </div>
+                    @guest
+                        <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <x-jet-nav-link href="{{ route('login') }}" :active="request()->routeIs('login')">
+                                Bejelentkezés
+                            </x-jet-nav-link>
+                            <x-jet-nav-link href="{{ route('register')  }}" :active="request()->routeIs('register')">
+                                Regisztráció
+                            </x-jet-nav-link>
+                        </div>
+                    @endguest
 
 
                     <!-- Hamburger -->
@@ -65,12 +67,14 @@
                     <x-jet-responsive-nav-link href="{{ url('/') }}" :active="false">
                         Kezdőlap
                     </x-jet-responsive-nav-link>
-                    <x-jet-responsive-nav-link href="{{ route('login') }}" :active="request()->routeIs('login')">
-                        Bejelentkezés
-                    </x-jet-responsive-nav-link>
-                    <x-jet-responsive-nav-link href="{{ route('register') }}" :active="request()->routeIs('register')">
-                        Regisztráció
-                    </x-jet-responsive-nav-link>
+                    @guest
+                        <x-jet-responsive-nav-link href="{{ route('login') }}" :active="request()->routeIs('login')">
+                            Bejelentkezés
+                        </x-jet-responsive-nav-link>
+                        <x-jet-responsive-nav-link href="{{ route('register') }}" :active="request()->routeIs('register')">
+                            Regisztráció
+                        </x-jet-responsive-nav-link>
+                    @endguest
                 </div>
 
             </div>

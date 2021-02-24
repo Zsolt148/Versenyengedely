@@ -20,7 +20,8 @@ class CreatePaymentsTable extends Migration
             $table->string('stripe_id');
             $table->integer('amount_subtotal');
             $table->integer('amount_total');
-            $table->string('invoice')->nullable();
+            $table->string('receipt')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

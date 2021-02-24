@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
@@ -39,5 +41,12 @@ class AppServiceProvider extends ServiceProvider
                         ->withPath('');
                 });
         }
+
+        VerifyEmail::toMailUsing(function ($notifiable,$url){
+            $mail = new MailMessage;
+            $mail->markdown('emails.verify-email', ['url' => $url]);
+            $mail->subject('Email megerősítése');
+            return $mail;
+        });
     }
 }

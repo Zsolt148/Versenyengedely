@@ -20,7 +20,8 @@ class ResetUserPassword implements ResetsUserPasswords
     public function reset($user, array $input)
     {
         Validator::make($input, [
-            'password' => ['required', 'string', 'confirmed', 'min:8'],
+            //'password' => ['required', 'string', 'confirmed', 'min:8'],
+            'password' => $this->passwordRules()
         ])->validate();
 
         $user->forceFill([

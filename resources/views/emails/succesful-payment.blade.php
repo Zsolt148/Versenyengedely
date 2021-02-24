@@ -1,9 +1,10 @@
 @component('mail::message')
-# Sikeres fizetés
+# Sikeres online fizetés
 
-Sikeresen megérkezett hozzánk a versenyengedélyek összege.
-<br>
-Az elkészült számlát csatolt fájlként a mellékletben találja.
+<p>
+Az elkészült befizetési bizonylatot csatolt fájlként a mellékletben találja.
+</p>
+
 
 Üdvözlettel,<br>
 {{ config('app.name') }}

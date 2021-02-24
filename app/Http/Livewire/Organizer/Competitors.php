@@ -15,9 +15,12 @@ class Competitors extends Component
 
     public function render()
     {
-        $result = Form::where('year', '=', $this->year)
-                            ->where('status', '=', 'accepted')
-                            ->where('payment', '=', 'done')
+        $result = Form::where('year', $this->year)
+                            ->where('payment', 'done')
+                            ->where(function ($query) {
+                                $query->where('status', 'accepted')
+                                    ->orWhere('status', 'expired_sport');
+                            })
                             ->where(function($query) { //or where group
                                 $query->where('vnev', 'like', '%' . $this->search . '%')
                                         ->orWhere('knev', 'like', '%' . $this->search . '%');

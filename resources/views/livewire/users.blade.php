@@ -1,5 +1,4 @@
 <div>
-
     <div class="my-5 text-sm text-gray-600 dark:text-gray-400">
         Csapatvezető típusú felhasználóknak kötelező az egyesület kiválasztása.
     </div>
@@ -11,7 +10,7 @@
 
     <x-jet-dialog-modal maxWidth="2xl" wire:model="isOpen">
         <x-slot name="title">
-            {{ __('Felhasználó szerkesztése') }}
+            Felhasználó szerkesztése
         </x-slot>
 
         <x-slot name="content">
@@ -55,11 +54,11 @@
 
         <x-slot name="footer">
             <x-jet-secondary-button wire:click="$toggle('isOpen')" wire:loading.attr="disabled">
-                {{ __('Mégse') }}
+                Mégse
             </x-jet-secondary-button>
 
             <x-jet-button class="ml-2" wire:click="save()" wire:loading.attr="disabled">
-                {{ __('Mentés') }}
+                Mentés
             </x-jet-button>
         </x-slot>
     </x-jet-dialog-modal>
@@ -67,7 +66,7 @@
     <!-- Delete User Confirmation Modal -->
     <x-jet-dialog-modal wire:model="confirmingUserDeletion">
         <x-slot name="title">
-            {{ __('Felhasználó törlése') }}
+            Felhasználó törlése
         </x-slot>
 
         <x-slot name="content">
@@ -77,16 +76,19 @@
                 <div class="mb-4">
                     <span class="text-blue-500">{{ $user->name }}</span> - <span class="text-blue-500">{{ $user->email }}</span>
                 </div>
+                <div class="mb-4">
+                    A felhasználó törlése esetén a rendszer archiválni fogja a kérvényeit és a bizonylatait.
+                </div>
             @endif
         </x-slot>
 
         <x-slot name="footer">
             <x-jet-secondary-button wire:click="$toggle('confirmingUserDeletion')" wire:loading.attr="disabled">
-                {{ __('Mégse') }}
+                Mégse
             </x-jet-secondary-button>
 
             <x-jet-danger-button class="ml-2" wire:click="deleteUser" wire:loading.attr="disabled">
-                {{ __('Törlése') }}
+                Törlése
             </x-jet-danger-button>
         </x-slot>
     </x-jet-dialog-modal>

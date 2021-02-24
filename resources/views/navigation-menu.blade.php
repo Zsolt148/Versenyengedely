@@ -18,7 +18,7 @@
 
                     @if(auth()->user()->type == 'organizer' || auth()->user()->type == 'admin' || auth()->user()->type == 'super')
                         <x-jet-nav-link href="{{ route('organizer.forms') }}" :active="request()->routeIs('organizer.forms')">
-                            Versenyző lista
+                            Engedélyezett sportolók
                         </x-jet-nav-link>
                     @endif
 
@@ -30,12 +30,12 @@
                             Versenyengedélyek
                         </x-jet-nav-link>
                         <x-jet-nav-link href="{{ route('coach.payments') }}" :active="request()->routeIs('coach.payments')">
-                            Számlák
+                            Bizonylatok
                         </x-jet-nav-link>
                     @endif
                     @if(auth()->user()->type == 'admin' || auth()->user()->type == 'super')
                         <x-jet-nav-link href="{{ route('admin.forms.index') }}" :active="request()->routeIs('admin.forms.*')">
-                            Versenyengedély kérelmek
+                            Kérelmek
                         </x-jet-nav-link>
                         <x-jet-nav-link href="{{ route('admin.teams.index') }}" :active="request()->routeIs('admin.teams.index')">
                             Egyesületek
@@ -46,7 +46,7 @@
                     @endif
                     @if(auth()->user()->type == 'super')
                         <x-jet-nav-link href="{{ route('super.payments') }}" :active="request()->routeIs('super.payments')">
-                            Számlák
+                            Bizonylatok
                         </x-jet-nav-link>
                         <x-jet-nav-link href="{{ route('super.users') }}" :active="request()->routeIs('super.users')">
                             Felhasználók
@@ -82,7 +82,7 @@
                             </div>
 
                             <x-jet-dropdown-link href="{{ route('profile.show') }}">
-                                {{ __('Profil') }}
+                                Beállítások
                             </x-jet-dropdown-link>
 
                             <div class="border-t border-gray-100 dark:border-gray-400"></div>
@@ -123,7 +123,7 @@
 
             @if(auth()->user()->type == 'organizer' || auth()->user()->type == 'admin' || auth()->user()->type == 'super')
                 <x-jet-responsive-nav-link href="{{ route('organizer.forms') }}" :active="request()->routeIs('organizer.forms')">
-                    Versenyző lista
+                    Engedélyezett sportolók
                 </x-jet-responsive-nav-link>
             @endif
 
@@ -131,8 +131,11 @@
                 <x-jet-responsive-nav-link href="{{ route('coach.forms.index') }}" :active="request()->routeIs('coach.forms.*')">
                     Versenyengedély kérelmek
                 </x-jet-responsive-nav-link>
+                <x-jet-responsive-nav-link href="{{ route('coach.licences') }}" :active="request()->routeIs('coach.licences')">
+                    Versenyengedélyek
+                </x-jet-responsive-nav-link>
                 <x-jet-responsive-nav-link href="{{ route('coach.payments') }}" :active="request()->routeIs('coach.payments')">
-                    Számlák
+                    Bizonylatok
                 </x-jet-responsive-nav-link>
             @endif
         </div>
@@ -149,7 +152,7 @@
             <div class="mt-3 space-y-1">
                 <!-- Account Management -->
                 <x-jet-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
-                    {{ __('Profil') }}
+                    Beállítások
                 </x-jet-responsive-nav-link>
 
                 <!-- Authentication -->

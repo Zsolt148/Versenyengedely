@@ -31,9 +31,9 @@ class SuccessfulPayment extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        $path = Storage::disk('invoice')->path($this->file);
+        $path = Storage::disk('receipt')->path($this->file);
         return $this->markdown('emails.succesful-payment')
-                    ->subject('Versenyengedély számla')
+                    ->subject('Befizetési bizonylat')
                     ->attach($path, ['mime' => 'application/pdf']);
     }
 }

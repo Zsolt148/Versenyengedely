@@ -12,14 +12,14 @@ use Mediconesystems\LivewireDatatables\Http\Livewire\LivewireDatatable;
 class FormsTable extends LivewireDatatable
 {
     public $model = Form::class;
-    public $exportable = true;
+    public $exportable = false;
 
     public function columns()
     {
         return [
             //Column::checkbox(),
             Column::name('id')->label('ID')->alignCenter(),
-            Column::name('competitor.name')->label('Versenyző')->searchable()->alignCenter()->filterable(),
+            Column::name('competitor.name')->label('Sportoló')->searchable()->alignCenter(),
             Column::name('team.name')->label('Egyesület')->searchable()->alignCenter()->filterable(),
             //Column::name('vnev')->label('V.név')->searchable(),
             //Column::name('knev')->label('K.név')->searchable(),
@@ -37,7 +37,7 @@ class FormsTable extends LivewireDatatable
                 if($data) return '<a href="/file/'.$data.'" target="_blank" class="text-blue-600 dark:text-blue-400 underline">Sportorvosi</a>';
             })->label('Sportorvosi')->alignCenter(),
             Column::callback(['license'], function ($data) {
-                if($data) return '<a href="/license/'.$data.'" target="_blank" class="text-blue-500 underline">Versenyengedély</a>';
+                if($data) return '<a href="/license/'.$data.'" target="_blank" class="text-blue-600 dark:text-blue-400 underline">Versenyengedély</a>';
             })->label('Versenyengedély')->alignCenter(),
             DateColumn::name('created_at')->label('Létrehozva')->format('Y.m.d H:i:s')->alignCenter(),
             //DateColumn::name('updated_at')->label('Frissítve')->format('Y.m.d H:i:s')->alignCenter(),

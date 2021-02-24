@@ -4,7 +4,7 @@
     </x-slot>
 
     <x-slot name="description">
-        {{ __('Használj hosszú, egyedi jelszót hogy biztonságba maradj.') }}
+        Használj hosszú, egyedi jelszót saját biztonságod érdekében.
     </x-slot>
 
     <x-slot name="form">

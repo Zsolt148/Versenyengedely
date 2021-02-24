@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Kindergarten;
 use App\Models\User;
+use Mediconesystems\LivewireDatatables\BooleanColumn;
 use Mediconesystems\LivewireDatatables\Column;
 use Mediconesystems\LivewireDatatables\DateColumn;
 use Mediconesystems\LivewireDatatables\Http\Livewire\LivewireDatatable;
@@ -23,16 +24,26 @@ class UsersTable extends LivewireDatatable
 
     public function columns() {
         return [
-            Column::checkbox(), NumberColumn::name('id')->label('ID'), //Column::name('vnev')->label('V. név')->searchable()->editable(),
-            //Column::name('knev')->label('K. név')->searchable()->editable(),
-            Column::name('name')->label('Név')->searchable()->editable(), //DateColumn::name('birth')->label('Szül.')->editable(),
-            Column::name('email')->label('Email')->searchable()->editable(), DateColumn::name('email_verified_at')->label('Megerősítve'), Column::callback(['type'], function ($type) {
+            Column::checkbox(), NumberColumn::name('id')->alignCenter()->label('#ID'),
+            Column::name('name')->label('Név')->alignCenter()->searchable(),
+            //DateColumn::name('birth')->label('Szül.')->editable(),
+            Column::name('email')->label('Email')->alignCenter()->searchable(),
+            DateColumn::name('email_verified_at')->alignCenter()->label('Megerősítve'),
+            Column::callback(['type'], function ($type) {
                 return User::TYPES[$type];
-            })->label('Típus')->filterable(User::TYPES), Column::callback(['wannabe'], function ($type) {
+            })->label('Jogosultság')->alignCenter()->filterable(User::TYPES),
+            Column::callback(['wannabe'], function ($type) {
                 if($type) return User::TYPES[$type];
-            })->label('Regisztrált mint')->filterable(User::TYPES), Column::name('team.name')->label('Egyesület')->searchable(), DateColumn::name('created_at')->label('Létrehozva')->format('Y.m.d'), Column::callback(['id'], function ($id) {
+            })->label('Regisztrált mint')->alignCenter()->filterable(User::TYPES),
+            Column::name('team.name')->label('Egyesület')->alignCenter()->searchable(),
+            Column::callback(['mandate'], function ($mandate) {
+                if($mandate) return '<a href="/mandate/'.$mandate.'" target="_blank" class="text-blue-600 dark:text-blue-400 underline">Meghatalm.</a>';
+            })->label('Meghatalm.')->alignCenter()->searchable(),
+            DateColumn::name('created_at')->label('Létrehozva')->alignCenter()->format('Y.m.d'),
+            Column::callback(['id'], function ($id) {
                 return view('tables.user-actions', ['id' => $id]);
-            })->label('Admin'),];
+            })->label('Admin')->alignCenter()
+        ];
     }
 
     public function updateSelected() {
@@ -42,6 +53,7 @@ class UsersTable extends LivewireDatatable
                     $this->validate();
                     foreach($this->selected as $key => $value) {
                         $u = User::find($value);
+                        if(request()->user()->cannot('update', $u)) abort(403);
                         $u->type = $this->type;
                         $u->save();
                     }
@@ -51,6 +63,7 @@ class UsersTable extends LivewireDatatable
                 case 'acceptType':
                     foreach($this->selected as $key => $value) {
                         $u = User::find($value);
+                        if(request()->user()->cannot('update', $u)) abort(403);
                         if($u->wannabe) {
                             $u->type = $u->wannabe;
                             $u->save();

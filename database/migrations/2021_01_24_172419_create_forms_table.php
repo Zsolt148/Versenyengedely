@@ -43,13 +43,13 @@ class CreateFormsTable extends Migration
             //process
             $table->year('year');
             $table->string('status'); // saved - pending - accepted
-            $table->string('payment'); //none - pending - done
-            $table->foreignId('payment_id')->nullable();
+            $table->string('payment')->nullable(); //none = null - pending - done
+            //$table->foreignId('payment_id')->nullable();
             $table->string('deny')->nullable();
             //timestamps
             $table->timestamp('turn_in')->nullable();
             $table->timestamp('processed')->nullable();
-            $table->timestamp('president')->nullable();
+            $table->date('form_valid')->nullable();
             //files
             $table->string('profile_photo')->nullable();
             $table->string('data_sheet')->nullable();

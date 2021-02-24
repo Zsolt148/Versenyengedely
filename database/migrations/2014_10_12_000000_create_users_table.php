@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('type'); // user - organizer - coach - admin - super
             $table->foreignId('teams_id')->nullable();
             $table->string('wannabe')->nullable();
+            $table->string('mandate')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

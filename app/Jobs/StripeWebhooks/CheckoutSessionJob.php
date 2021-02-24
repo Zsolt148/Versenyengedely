@@ -30,11 +30,18 @@ class CheckoutSessionJob implements ShouldQueue
     /** @var \Spatie\WebhookClient\Models\WebhookCall */
     public $webhookCall;
 
+    /**
+     * CheckoutSessionJob constructor.
+     * @param WebhookCall $webhookCall
+     */
     public function __construct(WebhookCall $webhookCall)
     {
         $this->webhookCall = $webhookCall;
     }
 
+    /**
+     * A webhookot feldolgozasa
+     */
     public function handle()
     {
         $event = $this->webhookCall;
@@ -44,23 +51,21 @@ class CheckoutSessionJob implements ShouldQueue
         //Log::info(json_encode($session));
 
         switch ($event->payload['type']) {
-            case 'checkout.session.completed':
 
+            case 'checkout.session.completed':
+            case 'checkout.session.async_payment_succeeded':
+
+                $check = false;
                 foreach($session['metadata'] as $key => $id) {
                     $form = Form::find($id);
-                    $form->payment = 'pending';
-                    $form->save();
+                    if($form->payment == 'pending') {
+                        $check = true;
+                    }
                 }
 
                 if($session['payment_status'] == 'paid') {
-                    $this->completePayment($session);
+                    if($check) $this->completePayment($session);
                 }
-
-                break;
-
-            case 'checkout.session.async_payment_succeeded':
-
-                $this->completePayment($session);
 
                 break;
 
@@ -68,7 +73,7 @@ class CheckoutSessionJob implements ShouldQueue
 
                 foreach($session['metadata'] as $key => $id) {
                     $form = Form::find($id);
-                    $form->payment = 'none';
+                    $form->payment = null;
                     $form->save();
                 }
 
@@ -88,12 +93,18 @@ class CheckoutSessionJob implements ShouldQueue
         // you can access the payload of the webhook call with `$this->webhookCall->payload`
     }
 
+    /**
+     * Fizetes veglegesitese
+     * @param $session
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     protected function completePayment($session) {
 
+        //Fizeto adatai
         $user = User::find($session['client_reference_id']);
         $address = $user->address; //address model
 
-        //vevo adatok
+        //Fizeto = vevo adatok
         $buyer = new Buyer([
             'name' => $address->name,
             'address' => $address->zip . ' ' . $address->address,
@@ -103,6 +114,7 @@ class CheckoutSessionJob implements ShouldQueue
             ],
         ]);
 
+        //Egy darab Payment letrehozasa a vevo es a stripe adatokkal
         $payment = Payment::create([
             'users_id' => $user->id,
             'teams_id' => $user->team->id,
@@ -112,30 +124,34 @@ class CheckoutSessionJob implements ShouldQueue
         ]);
 
         $items = [];
+        //fizetett engedelyeken vegig foreach
         foreach($session['metadata'] as $key => $id) {
             //Form done
             $form = Form::find($id);
             $form->payment = 'done';
-            $form->payment_id = $payment->id;
+            //payment-hez csatolas
+            $form->payments()->attach($payment->id);
             $form->save();
-            //versenyengedely
+            //versenyengedely keszitese
             createLicenseJob::dispatch($form); //license create
-            //invoice
+            //bizonylat teteleinek elkeszitese
             $name = ($form->title ? $form->title . ' ' : '') . $form->vnev . ' ' . $form->knev;
-            array_push($items, (new InvoiceItem())->title($name)->pricePerUnit(1000)->quantity(1));
+            array_push($items, (new InvoiceItem())->title($name)->pricePerUnit(3000)->quantity(1));
         }
 
-
-        $invoice = Invoice::make('Számla')
+        //bizonylat letrehozasa
+        $receipt = Invoice::make('Befizetési Bizonlyat')
             ->buyer($buyer)
             ->sequence($payment->id)
             ->addItems($items)
-            ->filename('számla_' . now()->format('Y') . '_' . str_pad($payment->id, 5, '0', STR_PAD_LEFT))
-            ->save('invoice');
+            ->filename('receipt_' . now()->format('Y') . '_' . str_pad($payment->id, 5, '0', STR_PAD_LEFT))
+            ->save('receipt');
 
-        $payment->invoice = $invoice->filename;
+        //bizonylat payment hez csatolasa
+        $payment->receipt = $receipt->filename;
         $payment->save();
 
-        Mail::to($user)->queue(new SuccessfulPayment($invoice->filename)); // Mail with invoice
+        //email a sikeres befizetesrol a bizonylattal egyutt
+        Mail::to($user)->queue(new SuccessfulPayment($receipt->filename));
     }
 }

@@ -35,15 +35,14 @@ class createLicenseJob implements ShouldQueue
      */
     public function handle()
     {
-        $date = now()->format('Y.m.d');
         $form = $this->form;
-        $comp = $form->competitor;
-        $profile = $form->profile_photo;
+        $pdf = PDF::loadView('coach.license', compact('form'));
 
-        $pdf = PDF::loadView('coach.license', compact('form', 'comp', 'date', 'profile'));
+        do {
+            $filename = Str::random(16) . '.pdf';
+        }while(Storage::disk('license')->exists($filename));
 
         //save
-        $filename = Str::random(12) . '.pdf';
         $pdf->save('storage/app/license/' . $filename);
 
         $form->license = $filename;

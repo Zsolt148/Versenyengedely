@@ -60,6 +60,7 @@ class FormPolicy
      */
     public function update(User $user, Form $form)
     {
+        if($form->status == 'accepted' || $form->status == 'pending') return false;
         return $user->teams_id === $form->teams_id;
     }
 

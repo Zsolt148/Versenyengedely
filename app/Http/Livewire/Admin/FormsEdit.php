@@ -3,36 +3,47 @@
 namespace App\Http\Livewire\Admin;
 
 use App\Jobs\createLicenseJob;
+use App\Mail\FormAccepted;
 use App\Mail\FormDenied;
 use App\Models\Form;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
+use Spatie\Activitylog\Models\Activity;
 
 class FormsEdit extends Component
 {
-    public $form, $deny, $showDeny = false;
+    public $form, $deny, $showDeny = false, $logs;
 
     public function submit($method) {
         switch ($method) {
             case 'accept':
                 $this->form->status = 'accepted';
                 $this->form->deny = null;
+
                 $this->form->processed_by = auth()->user()->id;
                 $this->form->processed = now()->format('Y-m-d H:i:s');
+                $this->form->form_valid = now()->format('Y') . '-12-31';
+
                 $this->form->save();
+                Mail::to($this->form->user)->queue(new FormAccepted($this->form));
                 $this->emit('saved');
+
                 $this->showDeny = false;
                 $this->deny = '';
                 break;
             case 'deny':
                 $this->form->status = 'denied';
                 $this->form->deny = $this->deny;
+
                 $this->form->processed_by = auth()->user()->id;
                 $this->form->processed = now()->format('Y-m-d H:i:s');
+                $this->form->form_valid = null;
+
                 $this->form->save();
                 Mail::to($this->form->user)->queue(new FormDenied($this->form));
                 $this->emit('saved');
+
                 $this->showDeny = false;
                 $this->deny = '';
                 break;
@@ -53,6 +64,16 @@ class FormsEdit extends Component
             }else {
                 $this->form = null;
             }
+        }
+
+        //log null
+        $this->logs = null;
+        //ha a form nem model akkor nem tolti be a logot
+        if($this->form instanceof \Illuminate\Database\Eloquent\Model) {
+            $this->logs = Activity::where('log_name', 'Form')
+                ->where('subject_id', $this->form->id)
+                ->orderBy('created_at', 'DESC')
+                ->get();
         }
 
         return view('livewire.admin.forms-edit');

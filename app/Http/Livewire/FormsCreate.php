@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Spatie\Activitylog\Models\Activity;
 
 class FormsCreate extends Component
 {
@@ -16,7 +17,7 @@ class FormsCreate extends Component
     //public $team_reg_code, $federal_reg_code, $privacy, $data_sheet, $sport_sheet, $profile_photo;
     //public $he_can_race = false, $can_race, $sport_time, $sport_valid;
     public $form;
-    public $profile_photo, $data_sheet, $sport_sheet;
+    public $profile_photo, $data_sheet, $sport_sheet, $logs;
     public $iteration = 0;
 
     protected $rules = [
@@ -46,9 +47,9 @@ class FormsCreate extends Component
 
         $this->validateOnly('form.competitors_id');
         $this->validate([
-            'profile_photo' => 'nullable|mimes:pdf,jpg,png',
-            'data_sheet' => 'nullable|mimes:pdf,jpg,png',
-            'sport_sheet' => 'nullable|mimes:pdf,jpg,png',
+            'profile_photo' => 'nullable|mimes:pdf,jpg,png|max:2048',
+            'data_sheet' => 'nullable|mimes:pdf,jpg,png|max:2048',
+            'sport_sheet' => 'nullable|mimes:pdf,jpg,png|max:2048',
         ]);
 
         $this->form = Form::updateOrCreate(
@@ -57,10 +58,10 @@ class FormsCreate extends Component
                 'teams_id' => request()->user()->teams_id,
                 'competitors_id' => $this->form['competitors_id'],
                 'year' => now()->format('Y'),
-                'status' => 'saved',
-                'payment' => 'none',
+                'status' => $this->form['status'],
             ],
             [
+                'status' => 'saved',
                 'users_id' => request()->user()->id,
                 //'comp_type' => $this->form['comp_type'] ?? null,
                 //personal
@@ -102,9 +103,26 @@ class FormsCreate extends Component
         $this->validate();
         if($this->validate_files()) return; //break if one file missing
 
-
         $this->form->status = 'pending';
+        $this->form->deny = null;
         $this->form->turn_in = now()->format('Y-m-d H:i:s');
+        $this->form->save();
+
+        $this->reset();
+        return redirect()->route('coach.forms.index');
+    }
+
+    //sport update
+    public function saveSport() {
+        $this->process_file($this->form, 'sport_sheet');
+
+        $this->validate();
+        if($this->validate_files()) return; //break if one file missing
+
+        $this->form->sport_time = $this->form['sport_time'];
+        $this->form->can_race = $this->form['can_race'];
+        $this->form->sport_valid = $this->form['sport_valid'];
+        $this->form->status = 'accepted';
         $this->form->save();
 
         $this->reset();
@@ -122,7 +140,9 @@ class FormsCreate extends Component
             $form->$file = $return;
             $form->save();
             $this->form->$file = $return;
-            $this->iteration++;
+
+            $this->$file = null;
+            $this->null_file_uploads();
         }
         return;
     }
@@ -130,7 +150,18 @@ class FormsCreate extends Component
     public function changedComp() {
         $this->resetValidation();
         //teams_id - competitors_id - status-saved - payment-pending CHECK
-        $query = Form::where([['teams_id', '=', request()->user()->teams_id], ['competitors_id', '=', $this->form['competitors_id']], ['status', '=', 'saved'], ['payment', '=', 'none']]);
+        //$query = Form::where([['teams_id', '=', request()->user()->teams_id], ['competitors_id', '=', $this->form['competitors_id']], ['status', '=', 'saved'], ['payment', '=', 'none']]);
+
+        //Ha megnyithato a form szerkesztesre akkor be tolti
+        $query = Form::where('teams_id', '=', request()->user()->teams_id)
+                        ->where('competitors_id', '=', $this->form['competitors_id'])
+                        ->where(function ($query) {
+                            $query->where('status', 'saved')
+                                ->orWhere('status', 'denied')
+                                ->orWhere('status', 'expired_form')
+                                ->orWhere('status', 'expired_sport');
+                        });
+
         if($query->exists()) {
             $this->form = $query->first();
             $this->null_file_uploads();
@@ -138,12 +169,14 @@ class FormsCreate extends Component
             $comp_id = $this->form['competitors_id'];
             $this->form = null;
             $this->form['competitors_id'] = $comp_id;
+            $this->form['status'] = 'saved';
             $this->null_file_uploads();
         }
     }
 
     public function validate_files() {
         $error = false;
+        //ha barmelyik error igaz akkor failed
         if($this->form->profile_photo == null) {
             $this->addError('profile_photo', 'A profilkép feltöltése kötelező!');
             $error = true;
@@ -167,16 +200,27 @@ class FormsCreate extends Component
     {
         if(request()->id) { //ha van ID az URL be
             $this->form = Form::find(request()->id);
-            if (request()->user()->cannot('update', $this->form)) { //policy ha nem a team e akkor nem tudja
-                abort(403);
-            }
+            //policy ha nem a felhaszáló egyesületé akkor
+            if (request()->user()->cannot('update', $this->form)) abort(403);
             $this->resetValidation();
             $this->null_file_uploads();
             //$this->changedComp();
         }
+        //log null
+        $this->logs = null;
+        //ha a form nem model akkor nem tolti be a logot
+        if($this->form instanceof \Illuminate\Database\Eloquent\Model) {
+            $this->logs = Activity::where('log_name', 'Form')
+                            ->where('subject_id', $this->form->id)
+                            ->orderBy('created_at', 'DESC')
+                            ->get();
+        }
+
+        //ha nem csapatvezeto akkor abort
         if (request()->user()->cannot('create', Form::class)) {
             abort(403);
         }
+
         return view('livewire.forms-create');
     }
 }

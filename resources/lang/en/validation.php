@@ -78,7 +78,7 @@ return [
     ],
     'max' => [
         'numeric' => 'The :attribute may not be greater than :max.',
-        'file' => 'The :attribute may not be greater than :max kilobytes.',
+        'file' => 'A :attribute nem lehet nagyobb mint :max kilobájt (2 Mb).',
         'string' => 'The :attribute may not be greater than :max characters.',
         'array' => 'The :attribute may not have more than :max items.',
     ],
@@ -131,15 +131,22 @@ return [
     */
 
     'custom' => [
-        'team' => [
-            'required_if' => 'Egyesület mező kötelező amikor Csapatvezető a Típus',
-        ],
         'teams_id' => [
             'required_if' => 'Egyesület mező kötelező amikor Csapatvezetőként szeretnél regisztrálni.',
+        ],
+        'team' => [
+            'required_if' => 'Az egyesület mező kötelező amikor Csapatvezető a típus.',
+        ],
+        'mandate' => [
+            'required_if' => 'Meghatalmazás feltöltése kötelező amikor Csapatvezetőként szeretnél regisztrálni.',
+            'max' => 'A meghatalmazás mérete nem lehet nagyobb mint 2 Mb.'
         ],
         'form.privacy_policy' => [
             'min' => 'Az Adatkezelési Tájékoztatót kötelező elfogadni.'
         ],
+        'terms' => [
+            'required' => 'Felhasználási Feltételek elfogadása kötelező!'
+        ]
     ],
 
     /*
@@ -157,7 +164,6 @@ return [
         'email' => 'Email cím',
         'password' => 'Jelszó',
         'current_password' => 'Régi jelszó',
-        'password' => 'Új jelszó',
         'password_confirmation' => 'Új jelszó mégegyszer',
         'meets_id' => 'Verseny',
         'app' => 'Alkalmazás',
@@ -166,7 +172,7 @@ return [
         'vnev' => 'Vezetéknév',
         'knev' => 'Keresztnév',
         'mother' => 'Anyja neve',
-        'terms' => 'Felhasználási feltételek elfogadása',
+        'terms' => 'Felhasználási feltételek',
         'competitors_id' => 'Versenyző',
         'teams_id' => 'Egyesület',
         'team' => 'Egyesület',
@@ -178,6 +184,7 @@ return [
         'data_sheet' => 'Adatlap',
         'profile_photo' => 'Profilkép',
         'sport_sheet' => 'Sportorvosi igazolás',
+        'mandate' => 'Meghatalmazás',
         'form' => [
             'vnev' => 'Vezetéknév',
             'knev' => 'Keresztnév',

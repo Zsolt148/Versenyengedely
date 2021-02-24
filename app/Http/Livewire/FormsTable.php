@@ -11,7 +11,7 @@ use Mediconesystems\LivewireDatatables\Http\Livewire\LivewireDatatable;
 class FormsTable extends LivewireDatatable
 {
     public $model = Form::class;
-    public $exportable = true;
+    public $exportable = false;
 
     public function builder() {
         return Form::query()->where('forms.teams_id', '=', request()->user()->teams_id);
@@ -22,16 +22,16 @@ class FormsTable extends LivewireDatatable
         return [
             //Column::checkbox(),
             Column::name('id')->label('ID')->alignCenter(),
-            Column::name('federal_reg_code')->label('Szövetségi szám')->alignCenter()->searchable()->filterable(),
+            Column::name('federal_reg_code')->label('Szövetségi szám')->alignCenter()->searchable(),
             Column::callback(['title', 'vnev', 'knev'], function ($title, $vnev, $knev) {
                 return $title . ' ' . $vnev . ' ' . $knev;
-            })->label('Versenyző')->searchable()->alignCenter()->filterable(),
+            })->label('Sportoló')->searchable()->alignCenter(),
             //Column::name('vnev')->label('V.név')->searchable(),
             //Column::name('knev')->label('K.név')->searchable(),
             Column::name('year')->label('Év')->searchable()->alignCenter()->filterable(Form::YEARS),
             Column::callback(['status'], function ($status) {
                 return Form::STATUS[$status];
-            })->label('Állapot')->searchable()->alignCenter()->filterable(Form::STATUS_LABEL),
+            })->label('Állapot')->alignCenter()->filterable(Form::STATUS_LABEL),
             /*
             Column::callback(['status', 'turn_in', 'processed'], function ($status, $turn_in, $processed){
                 return $this->getStatus($status, $turn_in, $processed);
@@ -39,7 +39,7 @@ class FormsTable extends LivewireDatatable
             */
             Column::callback(['payment'], function ($status){
                 return Form::PAYMENT[$status];
-            })->label('Fizetés')->searchable()->alignCenter()->filterable(Form::PAYMENT_LABEL),
+            })->label('Fizetés')->alignCenter()->filterable(Form::PAYMENT_LABEL),
             Column::callback(['profile_photo'], function ($data) {
                 if($data) return '<a href="/file/' . $data . '" target="_blank" class="text-blue-600 dark:text-blue-400 underline">Profilkép</a>';
             })->label('Profilkép')->alignCenter(),

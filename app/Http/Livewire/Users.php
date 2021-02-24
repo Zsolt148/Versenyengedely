@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Form;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 
 class Users extends Component
@@ -21,7 +23,9 @@ class Users extends Component
     ];
 
     public function editUser($id) {
+        $this->resetValidation();
         $user = User::findOrFail($id);
+        if (request()->user()->cannot('update', $user)) abort(403);
         $this->idd = $user->id;
         $this->name = $user->name;
         $this->email = $user->email;
@@ -52,7 +56,13 @@ class Users extends Component
 
     public function deleteUser() {
         $user = User::findOrFail($this->deleteUserId);
+        if (request()->user()->cannot('update', $user)) abort(403);
         $this->deleteUserId = null;
+
+        foreach($user->forms as $value) $value->delete();
+        foreach($user->payments as $value) $value->delete();
+
+        if($user->mandate) Storage::disk('mandate')->delete($user->mandate);
 
         $user->delete();
 

@@ -15,8 +15,8 @@ return [
 
     'reset' => 'A jelszavad sikeresen visszaállítottad',
     'sent' => 'Elküldtük a jelszó visszaállító emailt',
-    'throttled' => 'Kérlek várj az ujrapróbálkozás előtt',
+    'throttled' => 'Kérlek várj az újrapróbálkozás előtt',
     'token' => 'Ez a jelszó visszaállító token érvénytelen',
-    'user' => "We can't find a user with that email address.",
+    'user' => "Nem található ilyen felhasználó ezzel az email címmel.",
 
 ];

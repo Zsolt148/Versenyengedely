@@ -15,7 +15,7 @@ use Stripe\TaxRate;
 class formController extends Controller
 {
     public function __construct() {
-        \Stripe\Stripe::setApiKey('sk_test_51IDWHqDMnzdEZBuny2E7pLLTSM6vv7OH7fqNr5NyCN7k9bCJRIa5RmPkn00t5jbGwkptaq9bxISLLNOk1g2S2pZU00IBbv9AXM');
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
     }
 
     /**
@@ -45,7 +45,7 @@ class formController extends Controller
                     [
                         'price_data' => [
                             'currency' => 'huf',
-                            'unit_amount' => 100000,
+                            'unit_amount' => 300000,
                             'product_data' => [
                                 "name" => ($form->title ? $form->title . ' ' : '') . $form->vnev . ' ' . $form->knev,
                                 "metadata" => [

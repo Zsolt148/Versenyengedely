@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Payment extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $guarded = [];
 
@@ -16,6 +17,6 @@ class Payment extends Model
     }
 
     public function forms() {
-        return $this->hasMany(Form::class, 'payment_id');
+        return $this->belongsToMany(Form::class, 'form_has_payments', 'payment_id', 'form_id');
     }
 }

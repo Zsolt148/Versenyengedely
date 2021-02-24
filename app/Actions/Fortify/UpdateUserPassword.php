@@ -21,7 +21,7 @@ class UpdateUserPassword implements UpdatesUserPasswords
     {
         Validator::make($input, [
             'current_password' => ['required', 'string'],
-            'password' => ['required', 'string', 'confirmed', 'min:8'],
+            'password' => $this->passwordRules(),
         ])->after(function ($validator) use ($user, $input) {
             if (! isset($input['current_password']) || ! Hash::check($input['current_password'], $user->password)) {
                 $validator->errors()->add('current_password', 'A megadott jelszó nem egyezik a jelenlegi jelszavaddal');

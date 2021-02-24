@@ -9,14 +9,14 @@
                         <x-jet-checkbox name="selectedForms[]" id="{{ $form->id }}" wire:model.defer="selectedForms.{{ $form->id }}" wire:click="formClicked"/>
 
                         <div class="ml-2">
-                            {{ $form->title }} {{ $form->vnev }} {{ $form->knev }} <span class="ml-2 inline-block rounded-full bg-green-300 text-green-800 px-2 py-1 text-xs font-bold">Elfogadva</span>
+                            {{ $form->title }} {{ $form->vnev }} {{ $form->knev }} @php echo htmlspecialchars_decode(\App\Models\Form::STATUS[$form->status]) @endphp
                         </div>
                     </div>
                 @endforeach
             </div>
             <div class="sm:ml-20">
-                <h1 class="text-2xl">Összesen: {{ $total }} Ft</h1>
-                <span class="text-gray-600 dark:text-gray-200 text-sm">1000 Ft versenyengedélyenként</span><br>
+                <h1 class="text-2xl">Összesen: {{ number_format($total, 0, '', ' ') }} Ft</h1>
+                <span class="text-gray-600 dark:text-gray-200 text-sm">3000 Ft versenyengedélyenként</span><br>
                 <div class="mt-4">
                     <form action="{{ route('coach.forms.checkout') }}" class="inline-flex" method="post">
                         @csrf

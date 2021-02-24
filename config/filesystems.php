@@ -42,9 +42,9 @@ return [
             'visibility' => 'public',
         ],
 
-        'invoice' => [
+        'receipt' => [
             'driver' => 'local',
-            'root' => storage_path('app/invoice'),
+            'root' => storage_path('app/receipt'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
@@ -52,6 +52,13 @@ return [
         'license' => [
             'driver' => 'local',
             'root' => storage_path('app/license'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
+
+        'mandate' => [
+            'driver' => 'local',
+            'root' => storage_path('app/mandate'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],

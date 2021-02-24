@@ -8,9 +8,9 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'serial'          => 'Számlaszám.',
+    'serial'          => 'Bizonylatszám.',
     'date'            => 'Kibocsátás dátuma',
-    'seller'          => 'Számla kiállító',
+    'seller'          => 'Bizonylat kiállító',
     'buyer'           => 'Vevő',
     'address'         => 'Cím',
     'code'            => 'Adószám',

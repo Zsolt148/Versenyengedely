@@ -25,7 +25,7 @@
     <div class="py-12">
         <div class="mx-auto sm:px-2 lg:px-4">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-4 dark:bg-gray-600">
-                <div class="mb-10 mt-5 flex flex-row flex-wrap">
+                <div class="mb-10 mt-5 flex flex-col sm:flex-row flex-wrap">
                     <div>
                         @if(Auth::user()->teams_id)
                             <a role="button" href="{{ route('coach.forms.create') }}" class="items-center px-4 py-2 bg-blue-500 dark:bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 dark:hover:bg-blue-400 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25">
@@ -33,14 +33,17 @@
                             </a>
                         @endif
                     </div>
-                    <div class="ml-4">
+                    <div class="mt-5 mb-2 sm:my-0 ml-0 sm:ml-4">
                         <a role="button" href="{{ route('coach.forms.cart') }}" class="items-center px-4 py-2 bg-indigo-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 dark:hover:bg-indigo-400 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150">
                             Fizetés
                         </a>
                     </div>
                     <div class="ml-1">
                         <span class="text-sm text-gray-600 dark:text-gray-200">
-                            Fizetésre váró engedélyek: {{ $count = \App\Models\Form::where([['status', 'accepted'], ['forms.teams_id', request()->user()->teams_id], ['payment', 'none']])->count() }} db
+                            Fizetésre váró engedélyek: {{ $count = \App\Models\Form::where('forms.teams_id', request()->user()->teams_id)
+                                                                                    ->where('payment', null)
+                                                                                    ->where('status', 'accepted')
+                                                                                    ->count() }} db
                         </span>
                     </div>
                 </div>
