@@ -29,7 +29,7 @@ Route::get('/email/verify/{id}/{hash}', [\App\Http\Controllers\VerifyEmailContro
 
 /*
 Route::get('/license/test', function () {
-    $form = \App\Models\Form::find(1);
+    $form = \App\Models\Form::find(34);
     //\Illuminate\Support\Facades\Mail::to('test-xf8e00acq@srv1.mail-tester.com')->queue(new \App\Mail\FormAccepted($form));
     $pdf = PDF::loadView('coach.license', compact('form'));
     return $pdf->stream();
@@ -66,6 +66,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::middleware(['checkType:super'])->prefix('super')->name('super.')->group(function () {
         Route::view('users', 'super.users')->name('users');
         Route::view('payments', 'super.payments')->name('payments');
+
+        Route::get('payments/export', [\App\Http\Controllers\ExportController::class, 'superPayments'])->name('payments.export');
     });
 });
 

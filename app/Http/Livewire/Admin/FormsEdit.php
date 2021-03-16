@@ -73,6 +73,7 @@ class FormsEdit extends Component
             $this->logs = Activity::where('log_name', 'Form')
                 ->where('subject_id', $this->form->id)
                 ->orderBy('created_at', 'DESC')
+                ->orderBy('id', 'DESC')
                 ->get();
         }
 

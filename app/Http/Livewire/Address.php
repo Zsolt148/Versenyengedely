@@ -9,12 +9,11 @@ use App\Models\Address as Adr;
 class Address extends Component
 {
 
-    public $name, $zip, $address, $team_address;
-    public $tax_id;
+    public $name, $zip, $address, $team_address, $tax_id;
 
     protected $rules = [
         'name' => 'required',
-        'zip' => 'required',
+        'zip' => 'required|integer',
         'address' => 'required',
         'tax_id' => 'required',
     ];
@@ -23,10 +22,19 @@ class Address extends Component
         $team = request()->user()->team;
         $this->team_address = request()->user()->address ?? array();
 
-        $this->tax_id = $this->team_address['tax_id'] ?? null;
-        $this->name = $team->name;
-        $this->zip = explode(" ", $team->address)[0];
-        $this->address = explode(" ", $team->address, 2)[1];
+        if($this->team_address) {
+            $this->name = $this->team_address['name'];
+            $this->zip = $this->team_address['zip'];
+            $this->address = $this->team_address['address'];
+            $this->tax_id = $this->team_address['tax_id'] ?? null;
+        }else {
+            $this->tax_id = null;
+            $this->name = $team->name;
+            if($team->address != '-') {
+                $this->zip = explode(" ", $team->address)[0];
+                $this->address = explode(" ", $team->address, 2)[1];
+            }
+        }
     }
 
     public function store() {

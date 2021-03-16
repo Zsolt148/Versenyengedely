@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Actions\Fortify\PasswordValidationRules;
+use App\Events\UserRegistered;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -52,7 +53,7 @@ class Register extends Component
         Validator::make($input, [
             'type' => ['required'],
             'teams_id' => ['required_if:type,coach'],
-            'mandate' => ['required_if:type,coach','exclude_if:teams_id,null', 'mimes:pdf,jpg,png', 'max:2048'],
+            'mandate' => ['required_if:type,coach','exclude_if:teams_id,null', 'mimes:pdf,jpg,png', 'max:5120'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
@@ -61,7 +62,7 @@ class Register extends Component
 
         if($this->mandate && $this->mandate->isValid()) $file = str_replace("mandate/", "", $this->mandate->store('mandate'));
 
-        User::create([
+        $user = User::create([
             'name' => $this->name,
             'email' => $this->email,
             'type' => 'user',
@@ -70,6 +71,8 @@ class Register extends Component
             'mandate' => $file ?? null,
             'password' => Hash::make($this->password)
         ]);
+
+        UserRegistered::dispatch($user);
 
         session()->flash('status', 'Sikeres Regisztráció');
         return redirect()->route('login');

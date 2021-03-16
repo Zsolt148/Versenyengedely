@@ -1,18 +1,14 @@
 # <span class="dark:text-white">Adatvédelmi Irányelvek</span>
 
-## <span class="dark:text-white">1. Felhasználói Fiók adatvédelme</span>
-A Fiók adataira az MME Vállalkozó Kft. ide vonatkozó szabályzata az irányadó.
-Sem a tartalomkezelő, sem az oldal egyedi moduljai nem tartalmaznak nyílt forráskódot.
-
-## <span class="dark:text-white">2. Sportolók adatvédelme</span>
+## <span class="dark:text-white">1. Sportolók adatvédelme</span>
 Az oldal különös figyelmet fordít a Sportolók személyes adatainak védelmére!
 A felvitt adatok valóságtartalmáért a regisztrációt végző Felhasználó (egyesületi csapatvezető) a felelős, ezért a portál rögzíti ezen tevékenységeket.
 
-## <span class="dark:text-white">3. Szervezői adattovábbítási nyilatkozat</span>
+## <span class="dark:text-white">2. Szervezői adattovábbítási nyilatkozat</span>
 Minden Felhasználó, amennyiben a portálon Sportoló részére versenyengedélyt igényel tudomásul veszi az alábbiakat:
 
-Az MME Vállalkozó Kft. (H-6000 Kecskemét, Daru utca 21.) adatkezelő által ezen a honlapon, sportolói adatbázisában tárolt Sportoló adatokba részlegesen betekintést biztosít az MSZÚOSZ, és Versenyrendező, mint adatfeldolgozó részére. <br>
-Az MSZÚOSZ részére biztosított adatok köre az alábbi:
+A Magyar Szenior Úszók Országos Szövetsége, mint adatkezelő és az MME Vállalkozó Kft. (H-6000 Kecskemét, Daru utca 21.), mint adatfeldolgozó ezen a honlapon, sportolói adatbázisában tárolt Sportolói adatokba részlegesen betekintést biztosít a Felhasználók (Csapatvezetők és Versenyrendezők) részére. <br>
+A Csapatvezetők részére biztosított adatok köre az alábbi:
 
 •	Felhasználó neve / egyesület neve<br>
 •	Felhasználó email címe<br>
@@ -32,11 +28,11 @@ A versenyrendező részére biztosított adatok köre:<br>
 
 Az adatfeldolgozó által végzett adatfeldolgozási tevékenység jellege és célja az MSZÚOSZ-nél igazolt sportolók versenyengedélyének ellenőrzése.
 
-## <span class="dark:text-white">4. Stripe adattovábbítási nyilatkozat</span>
+## <span class="dark:text-white">3. Stripe adattovábbítási nyilatkozat</span>
 Minden Felhasználó, amennyiben a Stripe szolgáltatáson keresztül fizet, tudomásul veszi az alábbiakat:
 
-Az MME Vállalkozó Kft. (H-6000 Kecskemét, Daru utca 21.) adatkezelő által ezen a honlapon, felhasználói adatbázisában tárolt Fiók- és Sportoló adatok részlegesen átadásra kerülnek a Stripe (510 Townsend Street, San Francisco, CA 94103, USA) mint adatfeldolgozó részére. <br>
-Az adatkezelő által továbbított adatok köre az alábbi:
+Magyar Szenior Úszók Országos Szövetsége, mint adatkezelő és az MME Vállalkozó Kft. (H-6000 Kecskemét, Daru utca 21.), mint adatfeldolgozó ezen a honlapon felhasználói adatbázisában tárolt Fiók- és Sportoló adatok részlegesen átadásra kerülnek a Stripe (510 Townsend Street, San Francisco, CA 94103, USA) mint adatfeldolgozó részére. <br> 
+A továbbított adatok köre az alábbi:
 
 •	Felhasználó neve<br>
 •	Felhasználó email címe<br>

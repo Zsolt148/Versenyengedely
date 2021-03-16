@@ -14,6 +14,10 @@ class FormsTable extends LivewireDatatable
     public $model = Form::class;
     public $exportable = false;
 
+    public function builder() {
+        return Form::query()->with('competitor', 'team');
+    }
+
     public function columns()
     {
         return [

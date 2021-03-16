@@ -10,18 +10,24 @@ use Mediconesystems\LivewireDatatables\Http\Livewire\LivewireDatatable;
 class PaymentsTable extends LivewireDatatable
 {
     public $model = Payment::class;
-    public $exportable = true;
+    public $exportable = false;
+    public $customExport = 'super.payments.export';
 
     public function columns() {
         return [
             Column::name('id')->label('ID')->alignCenter(),
+            Column::name('stripe_id')->label('Stripe azon.')->alignCenter(),
+            Column::name('user.address.name')->label('Egyesület')->alignCenter()->searchable(),
+            Column::callback(['user.address.zip', 'user.address.address'], function ($zip, $adr) {
+                return $zip . ' ' . $adr;
+            })->label('Címe')->alignCenter()->searchable(),
+            Column::name('user.address.tax_id')->label('Adószáma')->alignCenter()->searchable(),
             Column::name('user.name')->label('Fizette')->alignCenter()->searchable(),
             Column::name('user.email')->label('Email')->alignCenter()->searchable(),
-            Column::name('stripe_id')->label('Fizető azon.')->alignCenter(),
-            Column::name('forms.vnev')->label('Sportolók')->alignCenter(),
-            Column::callback(['amount_subtotal'], function ($amount_subtotal) {
-                return substr($amount_subtotal, 0, -2) . " Ft";
-            })->label('Részösszeg')->alignCenter(),
+            Column::name('forms.vnev')->label('Sportolók')->truncate(30),
+            //Column::callback(['amount_subtotal'], function ($amount_subtotal) {
+            //    return substr($amount_subtotal, 0, -2) . " Ft";
+            //})->label('Részösszeg')->alignCenter(),
             Column::callback(['amount_total'], function ($amount_total) {
                 return substr($amount_total, 0, -2) . " Ft";
             })->label('Összesen')->alignCenter(),

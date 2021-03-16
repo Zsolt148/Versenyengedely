@@ -45,7 +45,7 @@ class CreateFormsTable extends Migration
             $table->string('status'); // saved - pending - accepted
             $table->string('payment')->nullable(); //none = null - pending - done
             //$table->foreignId('payment_id')->nullable();
-            $table->string('deny')->nullable();
+            $table->text('deny')->nullable();
             //timestamps
             $table->timestamp('turn_in')->nullable();
             $table->timestamp('processed')->nullable();

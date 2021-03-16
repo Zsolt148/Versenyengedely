@@ -40,6 +40,12 @@
                         <x-icons.excel class="m-2" /></button>
                 </div>
                 @endif
+                @isset($customExport)
+                    <div>
+                        <a href="{{ route($customExport) }}" class="flex items-center space-x-2 px-3 border border-green-400 rounded-md bg-white dark:bg-gray-800 text-green-500 dark:text-green-200 text-xs leading-4 font-medium uppercase tracking-wider hover:bg-green-200 dark:hover:bg-green-600 focus:outline-none"><span>Mentés</span>
+                            <x-icons.excel class="m-2" /></a>
+                    </div>
+                @endisset
 
                 @if($hideable === 'select')
                     @include('datatables::hide-column-multiselect')

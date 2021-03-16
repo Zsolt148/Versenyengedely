@@ -78,7 +78,7 @@ return [
     ],
     'max' => [
         'numeric' => 'The :attribute may not be greater than :max.',
-        'file' => 'A :attribute nem lehet nagyobb mint :max kilobájt (2 Mb).',
+        'file' => 'A :attribute nem lehet nagyobb mint :max kilobájt (5 Mb).',
         'string' => 'The :attribute may not be greater than :max characters.',
         'array' => 'The :attribute may not have more than :max items.',
     ],
@@ -139,7 +139,7 @@ return [
         ],
         'mandate' => [
             'required_if' => 'Meghatalmazás feltöltése kötelező amikor Csapatvezetőként szeretnél regisztrálni.',
-            'max' => 'A meghatalmazás mérete nem lehet nagyobb mint 2 Mb.'
+            'max' => 'A meghatalmazás mérete nem lehet nagyobb mint 5 Mb.'
         ],
         'form.privacy_policy' => [
             'min' => 'Az Adatkezelési Tájékoztatót kötelező elfogadni.'

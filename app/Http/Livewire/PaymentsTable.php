@@ -22,9 +22,9 @@ class PaymentsTable extends LivewireDatatable
             Column::name('id')->label('ID')->alignCenter(),
             Column::name('stripe_id')->label('Fizető azon.')->alignCenter(),
             Column::name('forms.vnev')->label('Sportolók')->alignCenter(),
-            Column::callback(['amount_subtotal'], function ($amount_subtotal) {
-                return substr($amount_subtotal, 0, -2) . " Ft";
-            })->label('Részösszeg')->alignCenter(),
+            //Column::callback(['amount_subtotal'], function ($amount_subtotal) {
+            //    return substr($amount_subtotal, 0, -2) . " Ft";
+            //})->label('Részösszeg')->alignCenter(),
             Column::callback(['amount_total'], function ($amount_total) {
                 return substr($amount_total, 0, -2) . " Ft";
             })->label('Összesen')->alignCenter(),

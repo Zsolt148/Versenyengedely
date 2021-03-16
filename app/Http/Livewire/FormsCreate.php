@@ -47,9 +47,9 @@ class FormsCreate extends Component
 
         $this->validateOnly('form.competitors_id');
         $this->validate([
-            'profile_photo' => 'nullable|mimes:pdf,jpg,png|max:2048',
-            'data_sheet' => 'nullable|mimes:pdf,jpg,png|max:2048',
-            'sport_sheet' => 'nullable|mimes:pdf,jpg,png|max:2048',
+            'profile_photo' => 'nullable|mimes:pdf,jpg,png|max:5120',
+            'data_sheet' => 'nullable|mimes:pdf,jpg,png|max:5120',
+            'sport_sheet' => 'nullable|mimes:pdf,jpg,png|max:5120',
         ]);
 
         $this->form = Form::updateOrCreate(
@@ -213,6 +213,7 @@ class FormsCreate extends Component
             $this->logs = Activity::where('log_name', 'Form')
                             ->where('subject_id', $this->form->id)
                             ->orderBy('created_at', 'DESC')
+                            ->orderBy('id', 'DESC')
                             ->get();
         }
 
