@@ -27,6 +27,10 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('queue:work --stop-when-empty')->everyMinute()->withoutOverlapping();
         $schedule->command('check:expire')->daily()->runInBackground();
+
+        //backups
+        $schedule->command('backup:clean')->daily()->at('01:00');
+        $schedule->command('backup:run')->daily()->at('02:00');
     }
 
     /**
