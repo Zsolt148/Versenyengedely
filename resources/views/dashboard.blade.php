@@ -23,6 +23,7 @@
                         <div class="font-semibold text-blue-600 dark:text-blue-400"><a href="/docs/Versenyengedelykero_lap_MSZUOSZ_2021.pdf" target="_blank" class="ml-1 underline">Versenyengedélykérő lap</a><span class="ml-2 rounded-full bg-gray-300 text-gray-800 px-2 py-1 text-xs font-bold">pdf</span></div>
                         <div class="font-semibold text-blue-600 dark:text-blue-400"><a href="/docs/Versenyengedelykero_lap_MSZUOSZ_2021.docx" class="ml-1 underline">Versenyengedélykérő lap</a><span class="ml-2 rounded-full bg-blue-300 text-blue-800 px-2 py-1 text-xs font-bold">docx</span></div>
                         <div class="font-semibold text-blue-600 dark:text-blue-400"><a href="https://www.youcompress.com/" target="_blank" class="ml-1 underline">Fájl tömörítő</a><span class="ml-2 rounded-full bg-blue-300 text-blue-800 px-2 py-1 text-xs font-bold">link</span></div>
+                        <div class="font-semibold text-blue-600 dark:text-blue-400"><a href="https://www.ilovepdf.com/merge_pdf" target="_blank" class="ml-1 underline">PDF egyesítő</a><span class="ml-2 rounded-full bg-blue-300 text-blue-800 px-2 py-1 text-xs font-bold">link</span></div>
                     </div>
                 </div>
             </div>

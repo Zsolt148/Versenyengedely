@@ -60,6 +60,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('competitors', [\App\Http\Controllers\Admin\competitorController::class, 'index'])->name('competitors.index');
         Route::get('forms', [\App\Http\Controllers\Admin\formController::class, 'index'])->name('forms.index');
         Route::get('forms/edit', [\App\Http\Controllers\Admin\formController::class, 'edit'])->name('forms.edit');
+
+        Route::get('forms/export', [\App\Http\Controllers\ExportController::class, 'adminForms'])->name('forms.export');
     });
 
     //Super group
