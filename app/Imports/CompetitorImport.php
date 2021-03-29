@@ -4,6 +4,8 @@ namespace App\Imports;
 
 use App\Models\Competitor;
 use App\Models\Team;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToModel;
 
 class CompetitorImport implements ToModel
@@ -17,23 +19,28 @@ class CompetitorImport implements ToModel
         $fed_reg = $row[0];
         $team_reg = $row[1];
         $name = $row[2];
-        $b = $row[3];
+        $birth = $row[3];
         $team = $row[4];
 
         $team_id = null;
         if (Team::where('name', 'like', '%' . $team . '%')->get()->isNotEmpty()) { //ha van egyesület
-            $team_id = Team::where('name', 'like', '%' . $team . '%')->first()->id;
-            return Competitor::updateOrCreate(
-                ['federal_reg_code' => $fed_reg],
-                [
-                    'team_reg_code' => $team_reg,
-                    'name' => $name,
-                    'birth' => $b,
-                    'teams_id' => $team_id,
-                ]
-            );
+
+            if(Carbon::createFromFormat('Y', $birth)->diffInYears(Carbon::now()) >= 25) { //ha tobb mint 25
+                $team_id = Team::where('name', 'like', '%' . $team . '%')->first()->id;
+                return Competitor::updateOrCreate(
+                    ['federal_reg_code' => $fed_reg],
+                    [
+                        'team_reg_code' => $team_reg,
+                        'name' => $name,
+                        'birth' => $birth,
+                        'teams_id' => $team_id,
+                    ]
+                );
+            }else {
+                Log::info('Under 25 years: ' . $fed_reg . ' - ' . $name . ' - ' . $birth . ' - ' . $team);
+            }
         }else {
-            return null;
+            Log::debug('Missing competitor: ' . $fed_reg . ' - ' . $name . ' - ' . $team);
         }
     }
 }

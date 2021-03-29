@@ -121,7 +121,7 @@ class TeamSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Csongrádi Senior',
+                'name' => 'Csongrádi Senior Úszó és Szabadidősport Egyesület',
                 'SA' => '17',
                 'address' => '6640 Csongrád, Tanya 827/A',
                 'webpage' => 'www.senior.csongrad.hu',

@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Competitor;
 use App\Models\Form;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -52,11 +54,17 @@ class FormsCreate extends Component
             'sport_sheet' => 'nullable|mimes:pdf,jpg,png|max:5120',
         ]);
 
+        $comp = Competitor::findOrFail($this->form['competitors_id']);
+        if(Carbon::createFromFormat('Y', $comp->birth)->diffInYears(Carbon::now()) < 25) {
+            $this->addError('form.competitors_id', 'Nem lehet 25 év alatti a sportoló!');
+            return;
+        }
+
         $this->form = Form::updateOrCreate(
             [
                 //'users_id' => request()->user()->id,
                 'teams_id' => request()->user()->teams_id,
-                'competitors_id' => $this->form['competitors_id'],
+                'competitors_id' => $comp->id,
                 'year' => now()->format('Y'),
                 'status' => $this->form['status'],
             ],
@@ -166,11 +174,18 @@ class FormsCreate extends Component
             $this->form = $query->first();
             $this->null_file_uploads();
         }else {
-            $comp_id = $this->form['competitors_id'];
+            $comp = Competitor::find($this->form['competitors_id']);
+
             $this->form = null;
-            $this->form['competitors_id'] = $comp_id;
+            $this->form['competitors_id'] = $comp->id;
             $this->form['status'] = 'saved';
             $this->null_file_uploads();
+
+            // ha 25 ev alatti - figyelmeztetes csak
+            if(Carbon::createFromFormat('Y', $comp->birth)->diffInYears(Carbon::now()) < 25) {
+                $this->addError('form.competitors_id', 'Nem lehet 25 év alatti a sportoló!');
+                return;
+            }
         }
     }
 

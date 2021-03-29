@@ -20,7 +20,6 @@ class competitorController extends Controller
         ]);
 
         Excel::import(new CompetitorImport, $request->file('file'), null, \Maatwebsite\Excel\Excel::CSV);
-        //Excel::import(new CheckComptetitorImport, $request->file('file'), null, \Maatwebsite\Excel\Excel::CSV);
 
         return redirect()->back();
     }
