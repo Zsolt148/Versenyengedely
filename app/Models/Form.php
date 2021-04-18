@@ -90,10 +90,16 @@ class Form extends Model
       '2021' => '2021',
     ];
 
+    const COLORS = [
+        'created' => 'bg-green-300 dark:bg-green-800 text-green-800 dark:text-green-100',
+        'updated' => 'bg-blue-300 dark:bg-blue-800 text-blue-800 dark:text-blue-100',
+        'deleted' => 'bg-red-300 dark:bg-red-800 text-red-800 dark:text-red-100',
+    ];
+
     const LOG_LABEL = [
-      'created' => '<span class="text-green-500 font-bold">Létrehozva</span>',
-      'updated' => '<span class="text-indigo-500 font-bold">Szerkesztve</span>',
-      'deleted' => '<span class="text-red-500 font-bold">Törölve</span>',
+        'created' => 'Létrehozva',
+        'updated' => 'Szerkesztve',
+        'deleted' => 'Törölve',
     ];
 
     const LOGS = [

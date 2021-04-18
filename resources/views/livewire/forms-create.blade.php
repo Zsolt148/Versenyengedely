@@ -267,51 +267,64 @@
 
         </div>
     </div>
-    <div class="text-gray-700 dark:text-gray-300">
+    <div class="container">
+        <div class="flex flex-col mx-auto p-2">
         @if($logs)
-            <div class="text-lg my-5">Előzmények:</div>
             @foreach($logs as $log)
-                <div class="my-3">
-                    <div class="underline">{{ $log->created_at->format('Y.m.d H:i:s') }} - @php echo htmlspecialchars_decode(\App\Models\Form::LOG_LABEL[$log->description]) @endphp</div>
-                    @foreach($log->changes['attributes'] as $key => $value)
+                <div class="flex">
+                    <div class="col-start-5 col-end-6 mr-10 relative">
+                        <div class="h-full w-6 flex items-center justify-center">
+                            <div class="h-full w-1 bg-gray-300 dark:bg-gray-500 pointer-events-none"></div>
+                        </div>
+                        <div class="w-6 h-6 absolute top-1/2 -mt-3 rounded-full {{ \App\Models\Form::COLORS[$log->description] }} shadow"></div>
+                    </div>
+                    <div class="{{ \App\Models\Form::COLORS[$log->description] }} col-start-6 col-end-10 p-4 rounded-xl my-4 mr-auto shadow-md">
+                        <h3 class="font-bold text-lg mb-1">
+                            {{ $log->created_at->format('Y.m.d H:i:s') }} - @php echo htmlspecialchars_decode(\App\Models\Form::LOG_LABEL[$log->description]) @endphp
+                        </h3>
+                        <p class="leading-tight text-justify">
+                            @foreach($log->changes['attributes'] as $key => $value)
                         @if($value && !in_array($key, ['id', 'users_id', 'teams_id', 'competitors_id', 'processed_by', 'payment_id', 'updated_at', 'updated_at']))
                             @switch($key)
                                 @case('sex')
-                                    {{ \App\Models\Form::LOGS[$key] }}: @if($value == 'male') Férfi @elseif($value == 'femaile') Nő @endif <br>
+                                    <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($value == 'male') Férfi @elseif($value == 'femaile') Nő @endif <br>
                                 @break
                                 @case('privacy_policy')
-                                    {{ \App\Models\Form::LOGS[$key] }}: @if($value == '1') Elfogadva @endif <br>
+                                    <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($value == '1') Elfogadva @endif <br>
                                 @break
                                 @case('can_race')
-                                    {{ \App\Models\Form::LOGS[$key] }}: @if($value == 1) Versenyezhet @elseif($value == 0) Nem versenyezhet @endif <br>
-                                @break
+                                    <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($value == 1) Versenyezhet @elseif($value == 0) Nem versenyezhet @endif <br>
                                 @break
                                 @case('profile_photo')
-                                    <a href="/file/{{$value}}" target="_blank" class="text-blue-600 dark:text-blue-400 underline">Profilkép</a>
+                                    <a href="/file/{{$value}}" target="_blank" class="underline">Feltöltött Profilkép</a>
                                 @break
                                     @case('data_sheet')
-                                    <a href="/file/{{$value}}" target="_blank" class="text-blue-600 dark:text-blue-400 underline">Adatlap</a>
+                                    <a href="/file/{{$value}}" target="_blank" class="underline">Feltöltött Adatlap</a>
                                 @break
                                 @case('sport_sheet')
-                                    <a href="/file/{{$value}}" target="_blank" class="text-blue-600 dark:text-blue-400 underline">Sportorvosi</a>
+                                    <a href="/file/{{$value}}" target="_blank" class="underline">Feltöltött Sportorvosi</a>
                                 @break
                                 @case('license')
-                                    <a href="/license/{{$value}}" target="_blank" class="text-blue-600 dark:text-blue-400 underline">Engedély</a>
+                                    <a href="/license/{{$value}}" target="_blank" class="underline">Kiállított Engedély</a>
                                 @break
                                 @case('status')
-                                    {{ \App\Models\Form::LOGS[$key] }}: @if($log->changes['old'][$key] ?? null) @php echo htmlspecialchars_decode(\App\Models\Form::STATUS[$log->changes['old'][$key]]) @endphp => @endif @php echo htmlspecialchars_decode(\App\Models\Form::STATUS[$value]) @endphp
-                                    <br>
+                                    <div>
+                                        <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($log->changes['old'][$key] ?? null) @php echo htmlspecialchars_decode(\App\Models\Form::STATUS[$log->changes['old'][$key]]) @endphp -> @endif @php echo htmlspecialchars_decode(\App\Models\Form::STATUS[$value]) @endphp
+                                    </div>
                                 @break
                                 @case('payment')
-                                {{ \App\Models\Form::LOGS[$key] }}: @if($log->changes['old'][$key] ?? null) @php echo htmlspecialchars_decode(\App\Models\Form::PAYMENT[$log->changes['old'][$key]]) @endphp => @endif @php echo htmlspecialchars_decode(\App\Models\Form::PAYMENT[$value]) @endphp
-                                <br>
+                                    <div>
+                                        <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($log->changes['old'][$key] ?? null) @php echo htmlspecialchars_decode(\App\Models\Form::PAYMENT[$log->changes['old'][$key]]) @endphp -> @endif @php echo htmlspecialchars_decode(\App\Models\Form::PAYMENT[$value]) @endphp
+                                    </div>
                                 @break
                                 @default
-                                    {{ \App\Models\Form::LOGS[$key] }}: {{ ($log->changes['old'][$key] ?? null) ? $log->changes['old'][$key] . ' =>' : null }} {{ $value }} <br>
+                                    <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: {{ ($log->changes['old'][$key] ?? null) ? $log->changes['old'][$key] . ' ->' : null }} {{ $value }} <br>
                                 @break
                             @endswitch
                         @endif
                     @endforeach
+                        </p>
+                    </div>
                 </div>
             @endforeach
         @endif

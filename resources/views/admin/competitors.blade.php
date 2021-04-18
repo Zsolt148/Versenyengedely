@@ -10,10 +10,17 @@
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-4 dark:bg-gray-600">
                 @livewire('admin.competitors')
             </div>
-            @if(Auth::user()->type == 'super')
-            <x-jet-section-border/>
+            @if(auth()->user()->type == 'super')
+                <x-jet-section-border/>
                 <div class="bg-white shadow overflow-hidden sm:rounded-md p-4 dark:bg-gray-600">
-                    <div class="text-lg my-4">Sportolók importálása</div>
+                    <div class="text-lg my-4">
+                        Sportolók importálása
+                        @if (session('status'))
+                            <div class="font-bold text-green-600 dark:text-green-300">
+                                {{ session('status') }}
+                            </div>
+                        @endif
+                    </div>
                     @if ($errors->any())
                         <div class="bg-red-200 px-6 py-4 my-2 rounded-md flex items-center w-1/4">
                             <svg viewBox="0 0 24 24" class="text-red-600 w-5 h-5 sm:w-5 sm:h-5 mr-3">
@@ -58,6 +65,7 @@
                         </div>
                     </form>
                 </div>
+
             @endif
         </div>
     </div>

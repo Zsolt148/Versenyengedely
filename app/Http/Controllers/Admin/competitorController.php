@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Imports\CheckComptetitorImport;
 use App\Imports\CompetitorImport;
+use App\Mail\NewCompetitorsImport;
 use Illuminate\Http\Request;
 use Excel;
+use Illuminate\Support\Facades\Mail;
 
 class competitorController extends Controller
 {
@@ -19,8 +21,16 @@ class competitorController extends Controller
             'file' => 'required|mimes:csv,txt'
         ]);
 
-        Excel::import(new CompetitorImport, $request->file('file'), null, \Maatwebsite\Excel\Excel::CSV);
+        $import = new CompetitorImport;
+        Excel::import($import, $request->file('file'), null, \Maatwebsite\Excel\Excel::CSV);
 
-        return redirect()->back();
+        $missingComps = $import->getMissingComps();
+        $youngComps = $import->getYoungComps();
+
+        if($missingComps || $youngComps) {
+            Mail::to(auth()->user())->queue(new NewCompetitorsImport($missingComps, $youngComps));
+        }
+
+        return redirect()->back()->with('status', 'Sikeres importálás!');
     }
 }

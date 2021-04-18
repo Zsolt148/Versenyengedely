@@ -5,11 +5,20 @@ namespace App\Imports;
 use App\Models\Competitor;
 use App\Models\Team;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToModel;
 
 class CompetitorImport implements ToModel
 {
+    private $missingComps;
+    private $youngComps;
+
+    public function __construct() {
+        $this->missingComps = collect();
+        $this->youngComps = collect();
+    }
+
     /**
      * @param array $row
      *
@@ -38,9 +47,23 @@ class CompetitorImport implements ToModel
                 );
             }else {
                 Log::info('Under 25 years: ' . $fed_reg . ' - ' . $name . ' - ' . $birth . ' - ' . $team);
+                $this->youngComps->push(
+                    ['federal_reg_code' => $fed_reg, 'name' => $name, 'birth' => $birth, 'team' => $team]
+                );
             }
         }else {
-            Log::debug('Missing competitor: ' . $fed_reg . ' - ' . $name . ' - ' . $team);
+            Log::debug('Missing competitor: ' . $fed_reg . ' - ' . $name .  ' - ' . $birth . ' - ' . $team);
+            $this->missingComps->push(
+                ['federal_reg_code' => $fed_reg, 'name' => $name, 'birth' => $birth, 'team' => $team]
+            );
         }
+    }
+
+    public function getYoungComps() {
+        return $this->youngComps;
+    }
+
+    public function getMissingComps() {
+        return $this->missingComps;
     }
 }
