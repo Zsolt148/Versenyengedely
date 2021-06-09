@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Admin;
 
 use App\Models\Team;
+use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 
 class Teams extends Component
@@ -15,6 +16,29 @@ class Teams extends Component
         'address' => 'required',
         'webpage' => 'nullable',
     ];
+
+    public function sync() {
+        $response = Http::get('https://mszuosz.hu/api/teams');
+
+        $response->throw();
+
+        $teams = $response->json();
+
+        foreach($teams as $team) {
+            Team::updateOrCreate(
+                [
+                    'name' => $team['name'],
+                    'SA' => $team['SA'],
+                ], [
+                    'address' => $team['address'],
+                    'webpage' => $team['webpage'],
+                ]
+            );
+        }
+
+        session()->flash('status', 'Sikeres szinkronizálás');
+        $this->emit('refreshLivewireDatatable');
+    }
 
     public function store() {
         $this->validate();

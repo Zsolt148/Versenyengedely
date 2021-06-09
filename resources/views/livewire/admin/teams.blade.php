@@ -1,10 +1,18 @@
 <div>
+    @if (session('status'))
+        <div class="font-bold text-green-600 dark:text-green-300">
+            {{ session('status') }}
+        </div>
+    @endif
+
     <div class="my-5">
-        <x-jet-button wire:click="$toggle('openNew')" wire:loading.attr="disabled">
-            Egyesület hozzáadása
+        <x-jet-button wire:click="sync()" wire:loading.attr="disabled">
+            Egyesületek szinkronizálása
         </x-jet-button>
     </div>
+
     <livewire:admin.teams-table />
+
     <x-jet-dialog-modal maxWidth="2xl" wire:model="openNew">
         <x-slot name="title">
             Új egyesület felvétele
