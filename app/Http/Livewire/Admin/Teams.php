@@ -27,9 +27,9 @@ class Teams extends Component
         foreach($teams as $team) {
             Team::updateOrCreate(
                 [
-                    'name' => $team['name'],
                     'SA' => $team['SA'],
                 ], [
+                    'name' => $team['name'],
                     'address' => $team['address'],
                     'webpage' => $team['webpage'],
                 ]
