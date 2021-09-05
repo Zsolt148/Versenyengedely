@@ -42,13 +42,17 @@ class CheckExpire extends Command
      */
     public function handle()
     {
-        $expired_form = Form::where('status', 'accepted')
-                            ->where('form_valid', '<', now()->format('Y-m-d'))
-                            ->get();
+        $expired_form = Form::query()
+            ->where('status', 'accepted')
+            ->where('form_valid', '<', now()->format('Y-m-d'))
+            ->with('user')
+            ->get();
 
-        $expired_sport = Form::where('status', 'accepted')
-                            ->where('sport_valid', '<', now()->format('Y-m-d'))
-                            ->get();
+        $expired_sport = Form::query()
+            ->where('status', 'accepted')
+            ->where('sport_valid', '<', now()->format('Y-m-d'))
+            ->with('user')
+            ->get();
 
         $count = 0;
 

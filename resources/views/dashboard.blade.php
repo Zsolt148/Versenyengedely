@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg mb-4">
                 <div class="p-5 pb-10 sm:px-10 bg-white border-b border-gray-200 dark:bg-gray-600 dark:border-gray-900">
                     <div class="mt-8 text-2xl">
                         Üdvözöljük a szenior úszók versenyengendély kezelő rendszerében!
@@ -17,32 +17,93 @@
                             Kérjük várjon türelemmel míg egy adminisztrátorunk elfogadja a regisztrációját.
                         </div>
                     @endif
-                    <table class="mt-6">
-                        <tr>
-                            <td><div class="font-semibold text-blue-600 dark:text-blue-400"><a href="/docs/Versenyengedely_cikk_20210221.pdf" target="_blank" class="ml-1 underline">Általános Tájékozató</a></div></td>
-                            <td><span class="ml-2 rounded-full bg-gray-300 text-gray-800 px-2 py-1 text-xs font-bold">pdf</span></td>
-                        </tr>
-                        <tr>
-                            <td><div class="font-semibold text-blue-600 dark:text-blue-400"><a href="/docs/Versenyengedelykero_lap_MSZUOSZ_2021.pdf" target="_blank" class="ml-1 underline">Versenyengedélykérő lap</a></div></td>
-                            <td><span class="ml-2 rounded-full bg-gray-300 text-gray-800 px-2 py-1 text-xs font-bold">pdf</span></td>
-                        </tr>
-                        <tr>
-                            <td><div class="font-semibold text-blue-600 dark:text-blue-400"><a href="/docs/Versenyengedelykero_lap_MSZUOSZ_2021.docx" class="ml-1 underline">Versenyengedélykérő lap</a></div></td>
-                            <td><span class="ml-2 rounded-full bg-blue-300 text-blue-800 px-2 py-1 text-xs font-bold">docx</span></td>
-                        </tr>
-                        <tr>
-                            <td><div class="font-semibold text-blue-600 dark:text-blue-400"><a href="/docs/Versenyengedely_csapatvezetoi_meghatalmazas.docx"class="ml-1 underline">Meghatalmazás csapatvezetőnek</a></div></td>
-                            <td><span class="ml-2 rounded-full bg-blue-300 text-blue-800 px-2 py-1 text-xs font-bold">docx</span></td>
-                        </tr>
-                        <tr>
-                            <td><div class="font-semibold text-blue-600 dark:text-blue-400"><a href="https://www.youcompress.com/" target="_blank" class="ml-1 underline">Fájl tömörítő</a></div></td>
-                            <td><span class="ml-2 rounded-full bg-blue-300 text-blue-800 px-2 py-1 text-xs font-bold">link</span></td>
-                        </tr>
-                        <tr>
-                            <td><div class="font-semibold text-blue-600 dark:text-blue-400"><a href="https://www.ilovepdf.com/merge_pdf" target="_blank" class="ml-1 underline">PDF egyesítő</a></div></td>
-                            <td><span class="ml-2 rounded-full bg-blue-300 text-blue-800 px-2 py-1 text-xs font-bold">link</span></td>
-                        </tr>
-                    </table>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-y-4 md:gap-x-4 mb-4">
+                <div class="md:max-w-md w-full rounded-lg shadow-lg p-4 bg-white border-b border-gray-200 dark:bg-gray-600 dark:border-gray-900">
+                    <div class="flex justify-between">
+                        <h3 class="font-semibold text-lg tracking-wide">Általános Tájékozató</h3>
+                        <span class="ml-2 rounded-full bg-gray-300 text-gray-800 px-2 py-1 text-xs font-bold">pdf</span>
+                    </div>
+                    <div class="mt-2">
+                        <a href="/docs/Versenyengedely_cikk_20210221.pdf" target="_blank" class="text-blue-600 dark:text-blue-400 inline-flex items-center font-semibold tracking-wide">
+                            <span class="hover:underline">
+                                Megtekintés
+                            </span>
+                            <span class="text-xl ml-2">&#8594;</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="md:max-w-md w-full rounded-lg shadow-lg p-4 bg-white border-b border-gray-200 dark:bg-gray-600 dark:border-gray-900">
+                    <div class="flex justify-between">
+                        <h3 class="font-semibold text-lg tracking-wide">Versenyengedélykérő lap</h3>
+                        <span class="ml-2 rounded-full bg-gray-300 text-gray-800 px-2 py-1 text-xs font-bold">pdf</span>
+                    </div>
+                    <div class="mt-2">
+                        <a href="/docs/Versenyengedelykero_lap_MSZUOSZ_2021.pdf" target="_blank" class="text-blue-600 dark:text-blue-400 inline-flex items-center font-semibold tracking-wide">
+                            <span class="hover:underline">
+                                Megtekintés
+                            </span>
+                            <span class="text-xl ml-2">&#8594;</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="md:max-w-md w-full rounded-lg shadow-lg p-4 bg-white border-b border-gray-200 dark:bg-gray-600 dark:border-gray-900">
+                    <div class="flex justify-between">
+                        <h3 class="font-semibold text-lg tracking-wide">Versenyengedélykérő lap</h3>
+                        <span class="ml-2 rounded-full bg-blue-300 text-blue-800 px-2 py-1 text-xs font-bold">docx</span>
+                    </div>
+                    <div class="mt-2">
+                        <a href="/docs/Versenyengedelykero_lap_MSZUOSZ_2021.docx" class="text-blue-600 dark:text-blue-400 inline-flex items-center font-semibold tracking-wide">
+                            <span class="hover:underline">
+                                Letöltés
+                            </span>
+                            <span class="text-xl ml-2">&#x2193;</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="md:max-w-md w-full rounded-lg shadow-lg p-4 bg-white border-b border-gray-200 dark:bg-gray-600 dark:border-gray-900">
+                    <div class="flex justify-between">
+                        <h3 class="font-semibold text-lg tracking-wide">Meghatalmazás csapatvezetőnek</h3>
+                        <span class="ml-2 rounded-full bg-blue-300 text-blue-800 px-2 py-1 text-xs font-bold">docx</span>
+                    </div>
+                    <div class="mt-2">
+                        <a href="/docs/Versenyengedely_csapatvezetoi_meghatalmazas.docx" class="text-blue-600 dark:text-blue-400 inline-flex items-center font-semibold tracking-wide">
+                            <span class="hover:underline">
+                                Letöltés
+                            </span>
+                            <span class="text-xl ml-2">&#x2193;</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="md:max-w-md w-full rounded-lg shadow-lg p-4 bg-white border-b border-gray-200 dark:bg-gray-600 dark:border-gray-900">
+                    <div class="flex justify-between">
+                        <h3 class="font-semibold text-lg tracking-wide">Fájl tömörítő</h3>
+                        <span class="ml-2 rounded-full bg-blue-300 text-blue-800 px-2 py-1 text-xs font-bold">link</span>
+                    </div>
+                    <div class="mt-2">
+                        <a href="https://www.youcompress.com/" target="_blank" class="text-blue-600 dark:text-blue-400 inline-flex items-center font-semibold tracking-wide">
+                            <span class="hover:underline">
+                                Megtekintés
+                            </span>
+                            <span class="text-xl ml-2">&#8594;</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="md:max-w-md w-full rounded-lg shadow-lg p-4 bg-white border-b border-gray-200 dark:bg-gray-600 dark:border-gray-900">
+                    <div class="flex justify-between">
+                        <h3 class="font-semibold text-lg tracking-wide">PDF egyesítő</h3>
+                        <span class="ml-2 rounded-full bg-blue-300 text-blue-800 px-2 py-1 text-xs font-bold">link</span>
+                    </div>
+                    <div class="mt-2">
+                        <a href="https://www.ilovepdf.com/merge_pdf" target="_blank" class="text-blue-600 dark:text-blue-400 inline-flex items-center font-semibold tracking-wide">
+                            <span class="hover:underline">
+                                Megtekintés
+                            </span>
+                            <span class="text-xl ml-2">&#8594;</span>
+                        </a>
+                    </div>
                 </div>
             </div>
 

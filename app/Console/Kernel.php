@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\CheckExpire;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,7 +14,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        CheckExpire::class,
     ];
 
     /**
@@ -24,13 +25,22 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
-        $schedule->command('queue:work --stop-when-empty')->everyMinute()->withoutOverlapping();
-        $schedule->command('check:expire')->daily()->at('00:01')->runInBackground();
+        $schedule->command('queue:work --stop-when-empty')
+            ->everyMinute()
+            ->withoutOverlapping();
+
+        $schedule->command(CheckExpire::class)
+            ->daily()
+            ->runInBackground();
 
         //backups
-        $schedule->command('backup:clean')->daily()->at('01:00');
-        $schedule->command('backup:run')->daily()->at('02:00');
+        $schedule->command('backup:clean')
+            ->daily()
+            ->at('01:00');
+
+        $schedule->command('backup:run')
+            ->daily()
+            ->at('02:00');
     }
 
     /**
