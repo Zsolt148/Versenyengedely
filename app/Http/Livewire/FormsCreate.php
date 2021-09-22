@@ -55,6 +55,7 @@ class FormsCreate extends Component
         ]);
 
         $comp = Competitor::findOrFail($this->form['competitors_id']);
+
         if(Carbon::createFromFormat('Y', $comp->birth)->diffInYears(Carbon::now()) < 25) {
             $this->addError('form.competitors_id', 'Nem lehet 25 év alatti a sportoló!');
             return;
@@ -62,16 +63,13 @@ class FormsCreate extends Component
 
         $this->form = Form::updateOrCreate(
             [
-                //'users_id' => request()->user()->id,
                 'teams_id' => request()->user()->teams_id,
                 'competitors_id' => $comp->id,
                 'year' => now()->format('Y'),
-                'status' => $this->form['status'],
+                'status' => $this->form['status'] ?? 'saved',
             ],
             [
-                'status' => 'saved',
                 'users_id' => request()->user()->id,
-                //'comp_type' => $this->form['comp_type'] ?? null,
                 //personal
                 'title' => $this->form['title'] ?? null,
                 'vnev' => $this->form['vnev'] ?? null,
@@ -109,7 +107,7 @@ class FormsCreate extends Component
 
         //validation
         $this->validate();
-        if($this->validate_files()) return; //break if one file missing
+        if($this->validateFiles()) return; //break if one file missing
 
         $this->form->status = 'pending';
         $this->form->deny = null;
@@ -125,7 +123,7 @@ class FormsCreate extends Component
         $this->process_file($this->form, 'sport_sheet');
 
         $this->validate();
-        if($this->validate_files()) return; //break if one file missing
+        if($this->validateFiles()) return; //break if one file missing
 
         $this->form->sport_time = $this->form['sport_time'];
         $this->form->can_race = $this->form['can_race'];
@@ -150,7 +148,7 @@ class FormsCreate extends Component
             $this->form->$file = $return;
 
             $this->$file = null;
-            $this->null_file_uploads();
+            $this->nullFileUploads();
         }
         return;
     }
@@ -172,14 +170,14 @@ class FormsCreate extends Component
 
         if($query->exists()) {
             $this->form = $query->first();
-            $this->null_file_uploads();
+            $this->nullFileUploads();
         }else {
             $comp = Competitor::find($this->form['competitors_id']);
 
             $this->form = null;
             $this->form['competitors_id'] = $comp->id;
             $this->form['status'] = 'saved';
-            $this->null_file_uploads();
+            $this->nullFileUploads();
 
             // ha 25 ev alatti - figyelmeztetes csak
             if(Carbon::createFromFormat('Y', $comp->birth)->diffInYears(Carbon::now()) < 25) {
@@ -189,7 +187,7 @@ class FormsCreate extends Component
         }
     }
 
-    public function validate_files() {
+    public function validateFiles() {
         $error = false;
         //ha barmelyik error igaz akkor failed
         if($this->form->profile_photo == null) {
@@ -207,7 +205,7 @@ class FormsCreate extends Component
         return $error;
     }
 
-    public function null_file_uploads() { //nulling files
+    public function nullFileUploads() { //nulling files
         $this->iteration++;
     }
 
@@ -218,7 +216,7 @@ class FormsCreate extends Component
             //policy ha nem a felhaszáló egyesületé akkor
             if (request()->user()->cannot('update', $this->form)) abort(403);
             $this->resetValidation();
-            $this->null_file_uploads();
+            $this->nullFileUploads();
             //$this->changedComp();
         }
         //log null

@@ -14,7 +14,7 @@
             </div>
             <div class="sm:col-span-6">
                 <x-jet-label for="status" value="Kérvény állapota" />
-                <div id="status">@if($form instanceof \Illuminate\Database\Eloquent\Model) @php echo htmlspecialchars_decode(\App\Models\Form::STATUS[$form['status']]) @endphp @endif @if($form instanceof \Illuminate\Database\Eloquent\Model && $form['status'] == 'denied') - {{ $form['deny'] }} @endif</div>
+                <div id="status">@if($form instanceof \Illuminate\Database\Eloquent\Model) {!! \App\Models\Form::STATUS[$form['status']] !!} @endif @if($form instanceof \Illuminate\Database\Eloquent\Model && $form['status'] == 'denied') - {{ $form['deny'] }} @endif</div>
             </div>
 
             <div class="sm:col-span-12">
@@ -280,7 +280,7 @@
                     </div>
                     <div class="{{ \App\Models\Form::COLORS[$log->description] }} col-start-6 col-end-10 p-4 rounded-xl my-4 mr-auto shadow-md">
                         <h3 class="font-bold text-lg mb-1">
-                            {{ $log->created_at->format('Y.m.d H:i:s') }} - @php echo htmlspecialchars_decode(\App\Models\Form::LOG_LABEL[$log->description]) @endphp
+                            {{ $log->created_at->format('Y.m.d H:i:s') }} - {!! \App\Models\Form::LOG_LABEL[$log->description] !!}
                         </h3>
                         <p class="leading-tight text-justify">
                             @foreach($log->changes['attributes'] as $key => $value)
@@ -309,12 +309,12 @@
                                 @break
                                 @case('status')
                                     <div>
-                                        <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($log->changes['old'][$key] ?? null) @php echo htmlspecialchars_decode(\App\Models\Form::STATUS[$log->changes['old'][$key]]) @endphp -> @endif @php echo htmlspecialchars_decode(\App\Models\Form::STATUS[$value]) @endphp
+                                        <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($log->changes['old'][$key] ?? null) {!! \App\Models\Form::STATUS[$log->changes['old'][$key]] !!} -> @endif {!! \App\Models\Form::STATUS[$value] !!}
                                     </div>
                                 @break
                                 @case('payment')
                                     <div>
-                                        <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($log->changes['old'][$key] ?? null) @php echo htmlspecialchars_decode(\App\Models\Form::PAYMENT[$log->changes['old'][$key]]) @endphp -> @endif @php echo htmlspecialchars_decode(\App\Models\Form::PAYMENT[$value]) @endphp
+                                        <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($log->changes['old'][$key] ?? null) {!! \App\Models\Form::PAYMENT[$log->changes['old'][$key]] !!} -> @endif {!! \App\Models\Form::PAYMENT[$value] !!}
                                     </div>
                                 @break
                                 @default
