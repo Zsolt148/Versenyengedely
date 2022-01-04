@@ -136,7 +136,10 @@ class CheckoutSessionJob implements ShouldQueue
             createLicenseJob::dispatch($form); //license create
             //bizonylat teteleinek elkeszitese
             $name = ($form->title ? $form->title . ' ' : '') . $form->vnev . ' ' . $form->knev;
-            array_push($items, (new InvoiceItem())->title($name)->pricePerUnit(3000)->quantity(1));
+            $items[] = (new InvoiceItem())
+                ->title($name)
+                ->pricePerUnit($form->payments->isEmpty() ? 3000 : 1500)
+                ->quantity(1);
         }
 
         //bizonylat letrehozasa

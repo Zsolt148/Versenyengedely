@@ -6,7 +6,7 @@
     </x-slot>
 
     @if($msg = Session::get('success'))
-        <div class="my-10 mx-auto w-full sm:w-1/2 justify-center" x-data="{ open: true }" x-show="open">
+        <div class="mt-10 mx-auto w-full sm:w-1/2 justify-center" x-data="{ open: true }" x-show="open">
             <div class="flex sm:flex-row sm:items-center bg-white dark:bg-gray-600 shadow rounded-md py-5 pl-6 pr-8 sm:pr-6">
                 <div class="flex flex-row items-center border-b sm:border-b-0 w-1/2 sm:w-auto pb-4 sm:pb-0">
                     <div class="text-green-500">

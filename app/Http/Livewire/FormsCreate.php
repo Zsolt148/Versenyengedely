@@ -45,6 +45,7 @@ class FormsCreate extends Component
         'form.sport_valid' => 'required',
     ];
 
+
     public function save() {
 
         $this->validateOnly('form.competitors_id');
@@ -61,37 +62,45 @@ class FormsCreate extends Component
             return;
         }
 
-        $this->form = Form::updateOrCreate(
-            [
-                'teams_id' => request()->user()->teams_id,
-                'competitors_id' => $comp->id,
-                'year' => now()->format('Y'),
-                'status' => $this->form['status'] ?? 'saved',
-            ],
-            [
-                'users_id' => request()->user()->id,
-                //personal
-                'title' => $this->form['title'] ?? null,
-                'vnev' => $this->form['vnev'] ?? null,
-                'knev' => $this->form['knev'] ?? null,
-                'birth' => $this->form['birth'] ?? null,
-                'birth_place' => $this->form['birth_place'] ?? null,
-                'sex' => $this->form['sex'] ?? null,
-                'mother' => $this->form['mother'] ?? null,
-                'zip' => $this->form['zip'] ?? null,
-                'city' => $this->form['city'] ?? null,
-                'address' => $this->form['address'] ?? null,
-                'mobile' => $this->form['mobile'] ?? null,
-                'email' => $this->form['email'] ?? null,
-                'team_reg_code' => $this->form['team_reg_code'] ?? null,
-                'federal_reg_code' => $this->form['federal_reg_code'] ?? null,
-                'privacy_policy' => $this->form['privacy_policy'] ?? null,
-                //sport
-                'sport_time' => $this->form['sport_time'] ?? null,
-                'can_race' => $this->form['can_race'] ?? null,
-                'sport_valid' => $this->form['sport_valid'] ?? null,
-            ]
-        );
+        $form = Form::firstOrNew([
+            'teams_id' => request()->user()->teams_id,
+            'competitors_id' => $comp->id,
+        ]);
+
+        $form->users_id = request()->user()->id;
+        $form->year = now()->format('Y');
+
+        if($form && $form->status == 'expired_form') {
+            $form->status = 'saved';
+        }else {
+            $form->status = $this->form['status'] ?? 'saved';
+        }
+
+        //personal
+        $form->title = $this->form['title'] ?? null;
+        $form->vnev = $this->form['vnev'] ?? null;
+        $form->knev = $this->form['knev'] ?? null;
+        $form->birth = $this->form['birth'] ?? null;
+        $form->birth_place = $this->form['birth_place'] ?? null;
+        $form->sex = $this->form['sex'] ?? null;
+        $form->mother = $this->form['mother'] ?? null;
+        $form->zip = $this->form['zip'] ?? null;
+        $form->city = $this->form['city'] ?? null;
+        $form->address = $this->form['address'] ?? null;
+        $form->mobile = $this->form['mobile'] ?? null;
+        $form->email = $this->form['email'] ?? null;
+        $form->team_reg_code = $this->form['team_reg_code'] ?? null;
+        $form->federal_reg_code = $this->form['federal_reg_code'] ?? null;
+        $form->privacy_policy = $this->form['privacy_policy'] ?? null;
+        //sport
+        $form->sport_time = $this->form['sport_time'] ?? null;
+        $form->can_race = $this->form['can_race'] ?? null;
+        $form->sport_valid = $this->form['sport_valid'] ?? null;
+
+        $form->save();
+
+        $this->form = $form;
+
         //File overwrites
         $this->process_file($this->form, 'profile_photo');
         $this->process_file($this->form, 'data_sheet');
@@ -115,6 +124,7 @@ class FormsCreate extends Component
         $this->form->save();
 
         $this->reset();
+
         return redirect()->route('coach.forms.index');
     }
 
@@ -126,7 +136,7 @@ class FormsCreate extends Component
         if($this->validateFiles()) return; //break if one file missing
 
         $this->form->sport_time = $this->form['sport_time'];
-        $this->form->can_race = $this->form['can_race'];
+        $this->form->can_race = $this->form['can_race']; //TODO check if can race
         $this->form->sport_valid = $this->form['sport_valid'];
         $this->form->status = 'accepted';
         $this->form->save();
@@ -211,29 +221,29 @@ class FormsCreate extends Component
 
     public function render()
     {
-        if(request()->id) { //ha van ID az URL be
+        //ha van ID az URL be
+        if(request()->id) {
             $this->form = Form::find(request()->id);
             //policy ha nem a felhaszáló egyesületé akkor
-            if (request()->user()->cannot('update', $this->form)) abort(403);
+            abort_if(request()->user()->cannot('update', $this->form), 403);
+
             $this->resetValidation();
             $this->nullFileUploads();
-            //$this->changedComp();
         }
-        //log null
+
         $this->logs = null;
-        //ha a form nem model akkor nem tolti be a logot
+
         if($this->form instanceof \Illuminate\Database\Eloquent\Model) {
-            $this->logs = Activity::where('log_name', 'Form')
-                            ->where('subject_id', $this->form->id)
-                            ->orderBy('created_at', 'DESC')
-                            ->orderBy('id', 'DESC')
-                            ->get();
+            $this->logs = Activity::query()
+                ->where('log_name', 'Form')
+                ->where('subject_id', $this->form->id)
+                ->orderBy('created_at', 'DESC')
+                ->orderBy('id', 'DESC')
+                ->get();
         }
 
         //ha nem csapatvezeto akkor abort
-        if (request()->user()->cannot('create', Form::class)) {
-            abort(403);
-        }
+        abort_if(request()->user()->cannot('create', Form::class), 403);
 
         return view('livewire.forms-create');
     }

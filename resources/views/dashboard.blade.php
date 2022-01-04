@@ -139,7 +139,7 @@
                                 <li class="underline">Fontos, hogy egy mentett igénylést bármikor lehet módosítani, ellenben a beküldött igénylést már nem lehet módosítani.</li>
                                 <li class="underline">Csak akkor kattintson az igénylés gombra, ha minden adat feltöltésre, beírásra került és azok helyességét ellenőrizte.</li>
                             </ol>
-                            <li><span class="text-blue-600 dark:text-blue-400 font-bold">Mentett versenyengedély kérelemek szerkesztése:</span></li>
+                            <li><span class="text-blue-600 dark:text-blue-400 font-bold">Mentett vagy lejárt versenyengedély kérelemek szerkesztése:</span></li>
                             <ol class="list-alpha list-inside space-y-3">
                                 <li>Keresse ki a táblázatból azt a kérelmet amelyiket módosítani, kiegészíteni (szerkeszteni) akar. Használj a táblázat keresőjét vagy valamelyik táblázat szűrőt a sorok felett.</li>
                                 <li>

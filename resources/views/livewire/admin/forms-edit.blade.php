@@ -30,7 +30,7 @@
                 </div>
                 <div class="mr-5 sm:mr-10">
                     <x-jet-label for="" value="Születési ideje" />
-                    {{ $form->birth->format('Y.m.d') }}
+                    {{ $form->birth ? $form->birth->format('Y.m.d') : '-' }}
                 </div>
                 <div class="mr-5 sm:mr-10">
                     <x-jet-label for="" value="Születési helye" />
@@ -96,7 +96,7 @@
             <div class="flex flex-row flex-wrap">
                 <div class="mr-5 sm:mr-10">
                     <x-jet-label for="" value="Sportorvosi időpontja" />
-                    {{ $form->sport_time->format('Y.m.d') }}
+                    {{ $form->sport_time ? $form->sport_time->format('Y.m.d') : '-' }}
                 </div>
                 <div class="mr-5 sm:mr-10">
                     <x-jet-label for="" value="Sportorvosi eredménye" />
@@ -104,7 +104,7 @@
                 </div>
                 <div class="mr-5 sm:mr-10">
                     <x-jet-label for="" value="Sportorvosi érvényessége" />
-                    {{ $form->sport_valid->format('Y.m.d') }}
+                    {{ $form->sport_valid ? $form->sport_valid->format('Y.m.d') : '-' }}
                 </div>
             </div>
             <hr class="my-5">
@@ -143,7 +143,7 @@
                 </div>
                 <div class="mr-5 sm:mr-10">
                     <x-jet-label for="" value="Benyújtotta:" />
-                    {{ $form->turn_in->format('Y.m.d H:i:s') }}
+                    {{ $form->turn_in ? $form->turn_in->format('Y.m.d H:i:s') : '-' }}
                 </div>
                 <div class="mr-5 sm:mr-10">
                     <x-jet-label for="" value="Utoljára szerkesztve:" />
@@ -167,7 +167,7 @@
                     </x-jet-action-message>
                 </div>
                 @if($form->processedBy && $form->processed)
-                    <div class="mt-2 text-sm text-gray-600 dark:text-gray-200">Feldolgozta: {{ $form->processedBy->name }} - {{ $form->processed->format('Y.m.d H:i:s') }}</div>
+                    <div class="mt-2 text-sm text-gray-600 dark:text-gray-200">Feldolgozta: {{ $form->processedBy->name }} - {{ $form->processed ? $form->processed->format('Y.m.d H:i:s') : '-' }}</div>
                 @endif
                 <div x-show="open" class="mt-3">
                     <x-jet-label for="deny" value="Elutasítás indoka*" />
@@ -199,7 +199,7 @@
                                 </div>
                                 <div class="{{ \App\Models\Form::COLORS[$log->description] }} col-start-6 col-end-10 p-4 rounded-xl my-4 mr-auto shadow-md">
                                     <h3 class="font-bold text-lg mb-1">
-                                        {{ $log->created_at->format('Y.m.d H:i:s') }} - @php echo htmlspecialchars_decode(\App\Models\Form::LOG_LABEL[$log->description]) @endphp
+                                        {{ $log->created_at ? $log->created_at->format('Y.m.d H:i:s') : '-' }} -  {!! \App\Models\Form::LOG_LABEL[$log->description] !!}
                                     </h3>
                                     <p class="leading-tight text-justify">
                                         @switch($key)
@@ -210,11 +210,11 @@
                                             <a href="/license/{{$value}}" target="_blank" class="underline">Kiállított Engedély</a>
                                             @break
                                             @case('status')
-                                            <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($log->changes['old'][$key] ?? null) @php echo htmlspecialchars_decode(\App\Models\Form::STATUS[$log->changes['old'][$key]]) @endphp -> @endif @php echo htmlspecialchars_decode(\App\Models\Form::STATUS[$value]) @endphp
+                                            <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($log->changes['old'][$key] ?? null) {!! \App\Models\Form::STATUS[$log->changes['old'][$key]] !!} -> @endif {!! \App\Models\Form::STATUS[$value] !!}
                                             <br>
                                             @break
                                             @case('payment')
-                                            <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($log->changes['old'][$key] ?? null) @php echo htmlspecialchars_decode(\App\Models\Form::PAYMENT[$log->changes['old'][$key]]) @endphp -> @endif @php echo htmlspecialchars_decode(\App\Models\Form::PAYMENT[$value]) @endphp
+                                            <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($log->changes['old'][$key] ?? null) {!! \App\Models\Form::PAYMENT[$log->changes['old'][$key]] !!} -> @endif {!! \App\Models\Form::PAYMENT[$value] !!}
                                             <br>
                                             @break
                                             @default

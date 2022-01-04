@@ -11,16 +11,22 @@
                 <div class="flex flex-row flex-wrap justify-center my-auto">
                     <div class="">
                         <h2 class="text-xl">Kiválasztott versenyengedélyek:</h2>
+                        @php($total = 0)
                         @foreach($forms as $form)
+                            @if($form->payments->isEmpty())
+                                @php($total += 3000)
+                            @else
+                                @php($total += 1500)
+                            @endif
                             <div class="flex items-center mb-2">
                                 <div class="mb-1">
-                                    {{ $form->title }} {{ $form->vnev }} {{ $form->knev }} @php echo htmlspecialchars_decode(\App\Models\Form::STATUS[$form->status]) @endphp
+                                    {{ $form->title }} {{ $form->vnev }} {{ $form->knev }} {!! \App\Models\Form::STATUS[$form->status] !!}
                                 </div>
                             </div>
                         @endforeach
                     </div>
                     <div class="sm:ml-20">
-                        <h1 class="text-2xl">Összesen fizetendő: {{ number_format(count($forms) * 3000, 0, '', ' ') }} Ft</h1>
+                        <h1 class="text-2xl">Összesen fizetendő: {{ number_format($total, 0, '', ' ') }} Ft</h1>
                         <span class="text-gray-600 dark:text-gray-200 text-sm">3000 Ft versenyengedélyenként</span><br>
                         <div class="mt-4">
                             <button id="checkout-button" class="items-center px-4 py-2 bg-indigo-500 border border-transparent rounded-md font-semibold text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150 shadow-md">

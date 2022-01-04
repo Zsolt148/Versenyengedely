@@ -62,17 +62,17 @@ class CheckExpire extends Command
          * Ha lejárt az engedély akkor nulláza az engedélyt, fizetést, fizetés azonosítót.
          * Emailt küld az érintett csapatvezetőknek
          */
-        foreach($expired_form as $value) {
-            $value->status = 'expired_form';
-            $value->license = null;
-            $value->payment = null;
-            $value->save();
-            $users[$value->user->id] = $value->user->name;
+        foreach($expired_form as $form) {
+            $form->status = 'expired_form';
+            $form->license = null;
+            $form->payment = null;
+            $form->save();
+            $users[$form->user->id] = $form->user->name;
         }
 
-        foreach($users as $id => $value) {
+        foreach($users as $id => $form) {
             $user = User::find($id);
-            Mail::to($user)->queue(new ExpiredForm($user));
+            Mail::to($user)->queue(new ExpiredForm($user)); //groupby
         }
 
         //expired sports
@@ -81,16 +81,17 @@ class CheckExpire extends Command
          * Ha lejárt a sportorvosi akkor nulláza a sportorvosi idejét, eredményét, érvényességét és a feltöltött fájlt.
          * Emailt küld az érintett csapatvezetőknek
          */
-        foreach($expired_sport as $value) {
-            $value->status = 'expired_sport';
-            $value->sport_time = null;
-            $value->can_race = null;
-            $value->sport_valid = null;
-            $value->sport_sheet = null;
-            $value->save();
-            $users[$value->user->id] = $value->user->name;
+        foreach($expired_sport as $form) {
+            $form->status = 'expired_sport';
+            $form->sport_time = null;
+            $form->can_race = null;
+            $form->sport_valid = null;
+            $form->sport_sheet = null;
+            $form->save();
+            $users[$form->user->id] = $form->user->name; //groupby
         }
-        foreach($users as $id => $value) {
+
+        foreach($users as $id => $form) {
             $user = User::find($id);
             Mail::to($user)->queue(new ExpiredSport($user));
         }

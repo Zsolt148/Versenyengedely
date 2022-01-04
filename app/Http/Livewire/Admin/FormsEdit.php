@@ -70,11 +70,13 @@ class FormsEdit extends Component
         $this->logs = null;
         //ha a form nem model akkor nem tolti be a logot
         if($this->form instanceof \Illuminate\Database\Eloquent\Model) {
-            $this->logs = Activity::where('log_name', 'Form')
+            $this->logs = Activity::query()
+                ->where('log_name', 'Form')
                 ->where('subject_id', $this->form->id)
                 ->orderBy('created_at', 'DESC')
                 ->orderBy('id', 'DESC')
                 ->get();
+            //dd($this->logs);
         }
 
         return view('livewire.admin.forms-edit');
