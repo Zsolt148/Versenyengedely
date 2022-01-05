@@ -14,6 +14,7 @@ class FormsTable extends LivewireDatatable
     public $model = Form::class;
     public $exportable = false;
     public $customExport = 'admin.forms.export';
+    public $perPage = 15;
 
     public function builder() {
         return Form::query()->with('competitor', 'team');

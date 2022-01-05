@@ -19,7 +19,6 @@ class Form extends Model
     protected static $logOnlyDirty = true;
     protected static $submitEmptyLogs = false;
 
-
     protected $casts = [
         'birth' => 'datetime:Y-m-d',
         'sport_time' => 'datetime:Y-m-d',
@@ -30,6 +29,8 @@ class Form extends Model
         'privacy_policy' => 'boolean',
         'can_race' => 'boolean',
     ];
+
+    //protected $appends = ['full_name'];
 
     public function user() {
         return $this->belongsTo(User::class, 'users_id');
@@ -56,37 +57,53 @@ class Form extends Model
         return $date->format('Y-m-d');
     }
 
+    public function getFullNameAttribute()
+    {
+        return "{$this->title} {$this->vnev} {$this->knev}";
+    }
+
+    const STATUS_SAVED              = 'saved';
+    const STATUS_PENDING            = 'pending';
+    const STATUS_ACCEPTED           = 'accepted';
+    const STATUS_DENIED             = 'denied';
+    const STATUS_EXPIRED_FORM       = 'expired_form';
+    const STATUS_EXPIRED_SPORT      = 'expired_sport';
+
     const STATUS = [
-        'saved' => '<span class="rounded-full bg-white dark:bg-gray-200 text-gray-800 px-2 py-1 text-xs border border-black dark:border-white font-bold">Mentve</span>',
-        'pending' => '<span class="rounded-full bg-yellow-300 text-yellow-800 px-2 py-1 text-xs font-bold">Feldolgozás alatt</span>',
-        'accepted' => '<span class="rounded-full bg-green-300 text-green-800 px-2 py-1 text-xs font-bold">Elfogadva</span>',
-        'denied' => '<span class="rounded-full bg-red-300 text-red-800 px-2 py-1 text-xs font-bold">Elutasítva</span>',
-        'expired_form' => '<span class="rounded-full bg-indigo-300 text-indigo-800 px-2 py-1 text-xs font-bold">Lejárt kérvény</span>',
-        'expired_sport' => '<span class="rounded-full bg-indigo-300 text-indigo-800 px-2 py-1 text-xs font-bold">Lejárt sportorvosi</span>',
+        self::STATUS_SAVED          => '<span class="rounded-full bg-white dark:bg-gray-200 text-gray-800 px-2 py-1 text-xs border border-black dark:border-white font-bold">Mentve</span>',
+        self::STATUS_PENDING        => '<span class="rounded-full bg-yellow-300 text-yellow-800 px-2 py-1 text-xs font-bold">Feldolgozás alatt</span>',
+        self::STATUS_ACCEPTED       => '<span class="rounded-full bg-green-300 text-green-800 px-2 py-1 text-xs font-bold">Elfogadva</span>',
+        self::STATUS_DENIED         => '<span class="rounded-full bg-red-300 text-red-800 px-2 py-1 text-xs font-bold">Elutasítva</span>',
+        self::STATUS_EXPIRED_FORM   => '<span class="rounded-full bg-indigo-300 text-indigo-800 px-2 py-1 text-xs font-bold">Lejárt kérvény</span>',
+        self::STATUS_EXPIRED_SPORT  => '<span class="rounded-full bg-indigo-300 text-indigo-800 px-2 py-1 text-xs font-bold">Lejárt sportorvosi</span>',
     ];
 
     const STATUS_LABEL = [
-        'saved' => 'Mentve',
-        'pending' => 'Feldolgozás alatt',
-        'accepted' => 'Elfogadva',
-        'denied' => 'Elutasítva',
-        'expired_form' => 'Lejárt kérvény',
-        'expired_sport' => 'Lejárt sportorvosi',
+        self::STATUS_SAVED          => 'Mentve',
+        self::STATUS_PENDING        => 'Feldolgozás alatt',
+        self::STATUS_ACCEPTED       => 'Elfogadva',
+        self::STATUS_DENIED         => 'Elutasítva',
+        self::STATUS_EXPIRED_FORM   => 'Lejárt kérvény',
+        self::STATUS_EXPIRED_SPORT  => 'Lejárt sportorvosi',
     ];
 
+    const PAYMENT_PENDING = 'pending';
+    const PAYMENT_DONE = 'done';
+
     const PAYMENT = [
-        'pending' => '<span class="rounded-full bg-yellow-300 text-yellow-800 px-2 py-1 text-xs font-bold">Folyamatban</span>',
-        'done' => '<span class="rounded-full bg-green-300 text-green-800 px-2 py-1 text-xs font-bold">Fizetve</span>',
-        null => '<span class="rounded-full bg-red-300 text-red-800 px-2 py-1 text-xs font-bold">Nincs</span>'
+        self::PAYMENT_PENDING   => '<span class="rounded-full bg-yellow-300 text-yellow-800 px-2 py-1 text-xs font-bold">Folyamatban</span>',
+        self::PAYMENT_DONE      => '<span class="rounded-full bg-green-300 text-green-800 px-2 py-1 text-xs font-bold">Fizetve</span>',
+        null                    => '<span class="rounded-full bg-red-300 text-red-800 px-2 py-1 text-xs font-bold">Nincs</span>'
     ];
 
     const PAYMENT_LABEL = [
-        'pending' => 'Feldolgozás alatt',
-        'done' => 'Fizetve',
-        null => 'Nincs',
+        self::PAYMENT_PENDING   => 'Feldolgozás alatt',
+        self::PAYMENT_DONE      => 'Fizetve',
+        null                    => 'Nincs',
     ];
 
     const YEARS = [
+      '2022' => '2022', //TODO
       '2021' => '2021',
     ];
 

@@ -33,7 +33,7 @@ class ExpiredForm extends Mailable
     {
         $forms = Form::where('forms.teams_id', $this->user->teams_id)
             ->where('payment', null)
-            ->where('status', 'expired_form');
+            ->where('status', Form::STATUS_EXPIRED_FORM);
 
         return $this->markdown('emails.expired-form', ['forms' => $forms, 'url' => route('coach.forms.index')])
             ->subject('Lejárt versenyengedélykérelem');

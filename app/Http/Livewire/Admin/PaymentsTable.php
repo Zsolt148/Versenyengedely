@@ -12,6 +12,7 @@ class PaymentsTable extends LivewireDatatable
     public $model = Payment::class;
     public $exportable = false;
     public $customExport = 'super.payments.export';
+    public $perPage = 15;
 
     public function columns() {
         return [

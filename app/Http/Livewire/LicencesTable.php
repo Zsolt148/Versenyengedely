@@ -12,14 +12,13 @@ class LicencesTable extends LivewireDatatable
 {
     public $model = Form::class;
     public $exportable = false;
+    public $perPage = 15;
 
     public function builder() {
-        return Form::query()->where('forms.teams_id', '=', request()->user()->teams_id)
-                            ->where(function ($query) {
-                              $query->where('status', 'accepted')
-                                    ->orWhere('status', 'expired_sport');
-                            })
-                            ->where('payment', 'done');
+        return Form::query()
+            ->where('forms.teams_id', '=', request()->user()->teams_id)
+            ->whereIn('status', [Form::STATUS_ACCEPTED, Form::STATUS_EXPIRED_SPORT])
+            ->where('payment', Form::PAYMENT_DONE);
     }
 
     public function columns()

@@ -12,9 +12,12 @@ class FormsTable extends LivewireDatatable
 {
     public $model = Form::class;
     public $exportable = false;
+    public $perPage = 15;
 
     public function builder() {
-        return Form::query()->with('competitor')->where('forms.teams_id', '=', request()->user()->teams_id);
+        return Form::query()
+            ->with('competitor')
+            ->where('forms.teams_id', '=', request()->user()->teams_id);
     }
 
     public function columns()

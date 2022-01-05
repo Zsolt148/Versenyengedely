@@ -86,7 +86,7 @@ class formController extends Controller
 
         foreach($session->metadata->values() as $key => $id) {
             $form = Form::find($id);
-            $form->payment = 'pending';
+            $form->payment = Form::PAYMENT_PENDING;
             $form->save();
         }
 

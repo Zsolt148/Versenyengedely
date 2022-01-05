@@ -18,7 +18,7 @@ class FormsEdit extends Component
     public function submit($method) {
         switch ($method) {
             case 'accept':
-                $this->form->status = 'accepted';
+                $this->form->status = Form::STATUS_ACCEPTED;
                 $this->form->deny = null;
 
                 $this->form->processed_by = auth()->user()->id;
@@ -26,6 +26,7 @@ class FormsEdit extends Component
                 $this->form->form_valid = now()->format('Y') . '-12-31';
 
                 $this->form->save();
+
                 Mail::to($this->form->user)->queue(new FormAccepted($this->form));
                 $this->emit('saved');
 
@@ -33,14 +34,15 @@ class FormsEdit extends Component
                 $this->deny = '';
                 break;
             case 'deny':
-                $this->form->status = 'denied';
-                $this->form->deny = $this->deny;
+                $this->form->status = Form::STATUS_DENIED;
+                $this->form->deny = $this->deny; //reason
 
                 $this->form->processed_by = auth()->user()->id;
                 $this->form->processed = now()->format('Y-m-d H:i:s');
                 $this->form->form_valid = null;
 
                 $this->form->save();
+
                 Mail::to($this->form->user)->queue(new FormDenied($this->form));
                 $this->emit('saved');
 
@@ -55,12 +57,11 @@ class FormsEdit extends Component
     public function render()
     {
         if(request()->id) {
-            $this->form = Form::find(request()->id);
-            if(!$this->form) abort(404);
+            $this->form = Form::findOrFail(request()->id);
             $this->deny = $this->form->deny;
         }else {
-            if(Form::where('status', 'pending')->exists()) {
-                $this->form = Form::where('status', 'pending')->first();
+            if(Form::where('status', Form::STATUS_PENDING)->exists()) {
+                $this->form = Form::where('status', Form::STATUS_PENDING)->first();
             }else {
                 $this->form = null;
             }

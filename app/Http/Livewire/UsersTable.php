@@ -17,6 +17,7 @@ class UsersTable extends LivewireDatatable
     public $exportable = false;
     public $beforeTableSlot = 'tables.users-selected';
     public $type, $kinder, $changeType = false, $acceptType = false, $action;
+    public $perPage = 15;
 
     protected $rules = [
       'type' => 'required',

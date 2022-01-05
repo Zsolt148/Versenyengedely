@@ -64,11 +64,11 @@
         </div>
         @endif
 
-        <div class="rounded-lg shadow-lg bg-white dark:bg-gray-700 max-w-screen overflow-x-scroll">
+        <div class="rounded-lg shadow-sm bg-white dark:bg-gray-700 max-w-screen overflow-x-scroll">
             <div class="rounded-lg @unless($this->hidePagination) rounded-b-none @endif">
                 <div class="table align-middle min-w-full">
                     @unless($this->hideHeader)
-                    <div class="table-row divide-x divide-gray-200 dark:divide-white dark:bg-gray-700">
+                    <div class="table-row divide-x divide-gray-200 dark:bg-gray-700">
                         @foreach($this->columns as $index => $column)
                             @if($hideable === 'inline')
                                 @include('datatables::header-inline-hide', ['column' => $column, 'sort' => $sort])
@@ -84,7 +84,7 @@
                         @endforeach
                     </div>
 
-                    <div class="table-row divide-x divide-gray-200 dark:divide-white bg-gray-50 dark:bg-gray-700">
+                    <div class="table-row divide-x divide-gray-200 bg-gray-50 dark:bg-gray-700">
                         @foreach($this->columns as $index => $column)
                             @if($column['hidden'])
                                 @if($hideable === 'inline')
@@ -94,7 +94,7 @@
                                 <div class="overflow-hidden align-top bg-blue-100 dark:bg-gray-600 px-2 py-2 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-800 dark:text-white uppercase tracking-wider flex h-full flex-col items-center space-y-2 focus:outline-none">
                                     <div>Összes</div>
                                     <div>
-                                        <input type="checkbox" wire:click="toggleSelectAll" @if(count($selected) === $this->results->total()) checked @endif class="form-checkbox mt-1 h-4 w-4 text-blue-600 transition duration-150 ease-in-out" />
+                                        <input type="checkbox" wire:click="toggleSelectAll" @if(count($selected) === $this->results->total()) checked @endif class="rounded border-gray-300 text-blue-500 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
                                     </div>
                                 </div>
                             @else
@@ -116,7 +116,7 @@
                     </div>
                     @endif
                     @forelse($this->results as $result)
-                        <div class="table-row p-1 divide-x divide-gray-100 dark:divide-white {{ isset($result->checkbox_attribute) && in_array($result->checkbox_attribute, $selected) ? 'bg-gray-300 dark:bg-gray-500' : ($loop->even ? 'bg-gray-100 dark:bg-gray-700' : 'bg-gray-50 dark:bg-gray-600') }}">
+                        <div class="table-row p-1 divide-x divide-gray-100 {{ isset($result->checkbox_attribute) && in_array($result->checkbox_attribute, $selected) ? 'bg-gray-300 dark:bg-gray-500' : ($loop->even ? 'bg-gray-100 dark:bg-gray-700' : 'bg-gray-50 dark:bg-gray-600') }}">
                             @foreach($this->columns as $column)
                                 @if($column['hidden'])
                                     @if($hideable === 'inline')
@@ -139,13 +139,13 @@
                 </div>
             </div>
             @unless($this->hidePagination)
-            <div class="rounded-lg rounded-t-none max-w-screen rounded-lg border-b border-gray-200 dark:border-white bg-white dark:bg-gray-700">
+            <div class="rounded-lg rounded-t-none max-w-screen rounded-lg border-b border-gray-200 dark:border-gray-200 bg-white dark:bg-gray-700">
                 <div class="p-2 sm:flex items-center justify-between">
                     {{-- check if there is any data --}}
                     @if($this->results[1])
                         <div class="my-2 sm:my-0 flex items-center">
-                            <select name="perPage" class="mt-1 form-select rounded-md block w-full pl-3 pr-10 py-2 text-base leading-6 border-gray-300 dark:border-white dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 sm:text-sm sm:leading-5" wire:model="perPage">
-                                <option value="10">10</option>
+                            <select name="perPage" class="mt-1 form-select rounded-md block w-full pl-3 pr-10 py-2 text-base leading-6 border-gray-300 dark:border-gray-200 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 sm:text-sm sm:leading-5" wire:model="perPage">
+                                <option value="15">15</option>
                                 <option value="25">25</option>
                                 <option value="50">50</option>
                                 <option value="100">100</option>

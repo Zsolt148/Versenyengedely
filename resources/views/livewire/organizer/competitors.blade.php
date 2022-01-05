@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="flex-shrink-0 w-full md:flex-1">
-            <select class="block w-full rounded-md shadow-md border border-gray-300 dark:bg-gray-700 focus:outline-none" name="team" id="team" wire:model="team">
+            <select class="block w-full rounded-md shadow-md border border-gray-300 dark:bg-gray-700 focus:outline-none" name="team" id="team" wire:model.lazy="team">
                 <option value="">Üres</option>
                 @foreach(\App\Models\Team::all() as $team)
                     <option value="{{ $team->id }}">{{ $team->name }}</option>
@@ -19,7 +19,7 @@
             </select>
         </div>
         <div class="flex-shrink-0 w-full md:w-64">
-            <select class="block w-full rounded-md shadow-md border border-gray-300 dark:bg-gray-700 focus:outline-none" name="year" id="year" wire:model="year">
+            <select class="block w-full rounded-md shadow-md border border-gray-300 dark:bg-gray-700 focus:outline-none" name="year" id="year" wire:model.lazy="year">
                 @foreach(\App\Models\Form::YEARS as $year)
                     <option value="{{ $year }}">{{ $year }}</option>
                 @endforeach
@@ -52,7 +52,7 @@
                     </tr>
                 @empty
                     <tr class="bg-white dark:bg-gray-600 border-b border-gray-400 py-10">
-                        <td colspan="6" class="px-4 py-5 dark:text-white text-lg">Nincs találat a következőre: '{{ $search }}' - {{ $year }}</td>
+                        <td colspan="6" class="px-4 py-5 dark:text-white text-lg">Nincs találat a következőre: '{{ $search }}'</td>
                     </tr>
                 @endforelse
             </tbody>

@@ -10,6 +10,7 @@ class TeamsTable extends LivewireDatatable
 {
     public $model = Team::class;
     public $exportable = true;
+    public $perPage = 15;
 
     public function columns() {
         return [

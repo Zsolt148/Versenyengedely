@@ -1,3 +1,3 @@
 <div class="flex justify-center">
-    <input type="checkbox" wire:model="selected" value="{{ $value }}" class="form-checkbox mt-1 h-4 w-4 text-blue-600 transition duration-150 ease-in-out" />
+    <input type="checkbox" wire:model="selected" value="{{ $value }}" class="rounded border-gray-300 text-blue-500 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
 </div>

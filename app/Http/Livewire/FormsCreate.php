@@ -70,10 +70,10 @@ class FormsCreate extends Component
         $form->users_id = request()->user()->id;
         $form->year = now()->format('Y');
 
-        if($form && $form->status == 'expired_form') {
-            $form->status = 'saved';
+        if($form && $form->status == Form::STATUS_EXPIRED_FORM) {
+            $form->status = Form::STATUS_SAVED;
         }else {
-            $form->status = $this->form['status'] ?? 'saved';
+            $form->status = $this->form['status'] ?? Form::STATUS_SAVED;
         }
 
         //personal
@@ -118,7 +118,7 @@ class FormsCreate extends Component
         $this->validate();
         if($this->validateFiles()) return; //break if one file missing
 
-        $this->form->status = 'pending';
+        $this->form->status = Form::STATUS_PENDING;
         $this->form->deny = null;
         $this->form->turn_in = now()->format('Y-m-d H:i:s');
         $this->form->save();
@@ -138,7 +138,7 @@ class FormsCreate extends Component
         $this->form->sport_time = $this->form['sport_time'];
         $this->form->can_race = $this->form['can_race']; //TODO check if can race
         $this->form->sport_valid = $this->form['sport_valid'];
-        $this->form->status = 'accepted';
+        $this->form->status = Form::STATUS_ACCEPTED;
         $this->form->save();
 
         $this->reset();
@@ -169,14 +169,10 @@ class FormsCreate extends Component
         //$query = Form::where([['teams_id', '=', request()->user()->teams_id], ['competitors_id', '=', $this->form['competitors_id']], ['status', '=', 'saved'], ['payment', '=', 'none']]);
 
         //Ha megnyithato a form szerkesztesre akkor be tolti
-        $query = Form::where('teams_id', '=', request()->user()->teams_id)
-                        ->where('competitors_id', '=', $this->form['competitors_id'])
-                        ->where(function ($query) {
-                            $query->where('status', 'saved')
-                                ->orWhere('status', 'denied')
-                                ->orWhere('status', 'expired_form')
-                                ->orWhere('status', 'expired_sport');
-                        });
+        $query = Form::query()
+            ->where('teams_id', '=', request()->user()->teams_id)
+            ->where('competitors_id', '=', $this->form['competitors_id'])
+            ->whereIn('status', [Form::STATUS_SAVED, Form::STATUS_DENIED, Form::STATUS_EXPIRED_FORM, Form::STATUS_EXPIRED_SPORT]);
 
         if($query->exists()) {
             $this->form = $query->first();
@@ -186,7 +182,7 @@ class FormsCreate extends Component
 
             $this->form = null;
             $this->form['competitors_id'] = $comp->id;
-            $this->form['status'] = 'saved';
+            $this->form['status'] = Form::STATUS_SAVED;
             $this->nullFileUploads();
 
             // ha 25 ev alatti - figyelmeztetes csak
@@ -197,7 +193,7 @@ class FormsCreate extends Component
         }
     }
 
-    public function validateFiles() {
+    private function validateFiles() {
         $error = false;
         //ha barmelyik error igaz akkor failed
         if($this->form->profile_photo == null) {
@@ -215,15 +211,15 @@ class FormsCreate extends Component
         return $error;
     }
 
-    public function nullFileUploads() { //nulling files
+    private function nullFileUploads() { //nulling files
         $this->iteration++;
     }
 
     public function render()
     {
         //ha van ID az URL be
-        if(request()->id) {
-            $this->form = Form::find(request()->id);
+        if($id = request()->id) {
+            $this->form = Form::find($id);
             //policy ha nem a felhaszáló egyesületé akkor
             abort_if(request()->user()->cannot('update', $this->form), 403);
 

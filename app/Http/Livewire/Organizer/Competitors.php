@@ -4,24 +4,24 @@ namespace App\Http\Livewire\Organizer;
 
 use App\Models\Form;
 use Livewire\Component;
-use Livewire\WithPagination;
 
 class Competitors extends Component
 {
-    //use WithPagination;
+    public $search, $team, $year;
 
-    public $search, $team, $year = '2021';
-    //protected $result;
+    public function mount()
+    {
+        $this->year = now()->format('Y');
+    }
 
     public function render()
     {
-        $query = Form::where('payment', 'done')
-            ->with('team')
-            ->where(function ($query) {
-                $query->where('status', 'accepted')
-                    ->orWhere('status', 'expired_sport');
-            });
-        /*
+        $query = Form::query()
+            ->where('payment', Form::PAYMENT_DONE)
+            ->whereIn('status', [Form::STATUS_ACCEPTED, Form::STATUS_EXPIRED_FORM])
+            ->with('team');
+
+        /* paginated
         $result = Form::where('year', $this->year)
                             ->where('payment', 'done')
                             ->where(function ($query) {
@@ -46,14 +46,13 @@ class Competitors extends Component
 
         if($this->search) {
             $query = $query->where(function($query) { //or where group
-                $query->where('vnev', 'like', '%' . $this->search . '%')
+                $query
+                    ->where('vnev', 'like', '%' . $this->search . '%')
                     ->orWhere('knev', 'like', '%' . $this->search . '%')
                     ->orWhere('title', 'like', '%' . $this->search . '%');
             });
         }
 
-        $result = $query->get();
-
-        return view('livewire.organizer.competitors', ['result' => $result]);
+        return view('livewire.organizer.competitors', ['result' => $query->get()]);
     }
 }

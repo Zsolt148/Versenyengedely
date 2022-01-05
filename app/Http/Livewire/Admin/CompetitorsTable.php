@@ -11,6 +11,7 @@ class CompetitorsTable extends LivewireDatatable
 {
     public $model = Competitor::class;
     public $exportable = true;
+    public $perPage = 15;
 
     public function columns()
     {

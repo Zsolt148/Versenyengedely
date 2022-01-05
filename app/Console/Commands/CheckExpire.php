@@ -42,47 +42,22 @@ class CheckExpire extends Command
      */
     public function handle()
     {
-        $expired_form = Form::query()
-            ->where('status', 'accepted')
-            ->where('form_valid', '<', now()->format('Y-m-d'))
-            ->with('user')
-            ->get();
 
+        //expired sports
         $expired_sport = Form::query()
-            ->where('status', 'accepted')
+            ->where('status', Form::STATUS_ACCEPTED)
             ->where('sport_valid', '<', now()->format('Y-m-d'))
             ->with('user')
             ->get();
 
-        $count = 0;
-
-        //expired forms
         $users = array();
-        /*
-         * Ha lejárt az engedély akkor nulláza az engedélyt, fizetést, fizetés azonosítót.
-         * Emailt küld az érintett csapatvezetőknek
-         */
-        foreach($expired_form as $form) {
-            $form->status = 'expired_form';
-            $form->license = null;
-            $form->payment = null;
-            $form->save();
-            $users[$form->user->id] = $form->user->name;
-        }
 
-        foreach($users as $id => $form) {
-            $user = User::find($id);
-            Mail::to($user)->queue(new ExpiredForm($user)); //groupby
-        }
-
-        //expired sports
-        $users = array();
         /*
          * Ha lejárt a sportorvosi akkor nulláza a sportorvosi idejét, eredményét, érvényességét és a feltöltött fájlt.
          * Emailt küld az érintett csapatvezetőknek
          */
         foreach($expired_sport as $form) {
-            $form->status = 'expired_sport';
+            $form->status = Form::STATUS_EXPIRED_SPORT;
             $form->sport_time = null;
             $form->can_race = null;
             $form->sport_valid = null;
@@ -94,6 +69,32 @@ class CheckExpire extends Command
         foreach($users as $id => $form) {
             $user = User::find($id);
             Mail::to($user)->queue(new ExpiredSport($user));
+        }
+
+        //expired forms
+        $expired_form = Form::query()
+            ->whereIn('status', [Form::STATUS_ACCEPTED, Form::STATUS_EXPIRED_FORM])
+            ->where('form_valid', '<', now()->format('Y-m-d'))
+            ->with('user')
+            ->get();
+
+        $users = array();
+
+        /*
+         * Ha lejárt az engedély akkor nulláza az engedélyt, fizetést, fizetés azonosítót.
+         * Emailt küld az érintett csapatvezetőknek
+         */
+        foreach($expired_form as $form) {
+            $form->status = Form::STATUS_EXPIRED_FORM;
+            $form->license = null;
+            $form->payment = null;
+            $form->save();
+            $users[$form->user->id] = $form->user->name;
+        }
+
+        foreach($users as $id => $form) {
+            $user = User::find($id);
+            Mail::to($user)->queue(new ExpiredForm($user)); //groupby
         }
 
         return 0;

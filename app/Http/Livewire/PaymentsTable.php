@@ -12,6 +12,7 @@ class PaymentsTable extends LivewireDatatable
 {
     public $model = Payment::class;
     public $exportable = false;
+    public $perPage = 15;
 
     public function builder() {
         return Payment::query()->where('payments.teams_id', '=', request()->user()->teams_id);

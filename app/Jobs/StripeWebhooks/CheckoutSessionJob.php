@@ -58,7 +58,7 @@ class CheckoutSessionJob implements ShouldQueue
                 $check = false;
                 foreach($session['metadata'] as $key => $id) {
                     $form = Form::find($id);
-                    if($form->payment == 'pending') {
+                    if($form->payment == Form::PAYMENT_PENDING) {
                         $check = true;
                     }
                 }
@@ -128,7 +128,7 @@ class CheckoutSessionJob implements ShouldQueue
         foreach($session['metadata'] as $key => $id) {
             //Form done
             $form = Form::find($id);
-            $form->payment = 'done';
+            $form->payment = Form::PAYMENT_DONE;
             //payment-hez csatolas
             $form->payments()->attach($payment->id);
             $form->save();

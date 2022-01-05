@@ -25,7 +25,7 @@ class FormPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -60,7 +60,7 @@ class FormPolicy
      */
     public function update(User $user, Form $form)
     {
-        if($form->status == 'accepted' || $form->status == 'pending') return false;
+        if($form->status == Form::STATUS_ACCEPTED || $form->status == Form::STATUS_PENDING) return false;
         return $user->teams_id === $form->teams_id;
     }
 
