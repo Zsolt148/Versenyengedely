@@ -10,13 +10,14 @@ use Illuminate\Http\Request;
 use Excel;
 use Illuminate\Support\Facades\Mail;
 
-class competitorController extends Controller
+class CompetitorController extends Controller
 {
     public function index() {
         return view('admin.competitors');
     }
 
     public function upload(Request $request) {
+        
         $request->validate([
             'file' => 'required|mimes:csv,txt'
         ]);

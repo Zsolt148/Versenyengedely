@@ -38,12 +38,9 @@
                             Fizetés
                         </a>
                     </div>
-                    <div class="ml-1">
+                    <div class="ml-2">
                         <span class="text-sm text-gray-600 dark:text-gray-200">
-                            Fizetésre váró engedélyek: {{ $count = \App\Models\Form::where('forms.teams_id', request()->user()->teams_id)
-                                                                                    ->where('payment', null)
-                                                                                    ->where('status', 'accepted')
-                                                                                    ->count() }} db
+                            Fizetésre váró engedélyek: {{ $formsCount }} db
                         </span>
                     </div>
                 </div>

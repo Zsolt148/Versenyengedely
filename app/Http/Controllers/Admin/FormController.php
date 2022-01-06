@@ -6,10 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Form;
 use Illuminate\Http\Request;
 
-class formController extends Controller
+class FormController extends Controller
 {
     public function index() {
-        return view('admin.forms.index');
+        $formsCount = Form::query()
+            ->where('status', Form::STATUS_PENDING)
+            ->count();
+
+        return view('admin.forms.index', [
+            'formsCount' => $formsCount,
+        ]);
     }
 
     public function edit() {

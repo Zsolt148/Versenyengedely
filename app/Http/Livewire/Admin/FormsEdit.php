@@ -22,7 +22,7 @@ class FormsEdit extends Component
                 $this->form->deny = null;
 
                 $this->form->processed_by = auth()->user()->id;
-                $this->form->processed = now()->format('Y-m-d H:i:s');
+                $this->form->processed = now();
                 $this->form->form_valid = now()->format('Y') . '-12-31';
 
                 $this->form->save();
@@ -38,7 +38,7 @@ class FormsEdit extends Component
                 $this->form->deny = $this->deny; //reason
 
                 $this->form->processed_by = auth()->user()->id;
-                $this->form->processed = now()->format('Y-m-d H:i:s');
+                $this->form->processed = now();
                 $this->form->form_valid = null;
 
                 $this->form->save();

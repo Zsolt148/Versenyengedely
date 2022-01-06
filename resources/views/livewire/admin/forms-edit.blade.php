@@ -10,7 +10,7 @@
                 </div>
                 <div class="mx-2 sm:mx-5">
                     <x-jet-label for="">Születési év</x-jet-label>
-                    <div class="text-xl">{{ $form->competitor->birth }}</div>
+                    <div class="text-xl @if(\Carbon\Carbon::createFromFormat('Y', $form->competitor->birth)->diffInYears(\Carbon\Carbon::now()) < 25) text-red-500 dark:text-red-400 @else text-green-500 dark:text-green-300 @endif">{{ $form->competitor->birth }}</div>
                 </div>
                 <div class="mx-2 sm:mx-5">
                     <x-jet-label for="">Egyesületi kód</x-jet-label>
@@ -187,45 +187,61 @@
         <div class="flex flex-col mx-auto p-2 text-gray-700 dark:text-gray-300">
             @if($logs)
                 @foreach($logs as $log)
-                    @foreach($log->changes['attributes'] as $key => $value)
-                        @if($value && in_array($key, ['sport_sheet', 'license', 'status', 'payment']))
-                            <!-- right -->
-                            <div class="flex">
-                                <div class="col-start-5 col-end-6 mr-10 relative">
-                                    <div class="h-full w-6 flex items-center justify-center">
-                                        <div class="h-full w-1 bg-gray-300 dark:bg-gray-500 pointer-events-none"></div>
-                                    </div>
-                                    <div class="w-6 h-6 absolute top-1/2 -mt-3 rounded-full {{ \App\Models\Form::COLORS[$log->description] }} shadow"></div>
-                                </div>
-                                <div class="{{ \App\Models\Form::COLORS[$log->description] }} col-start-6 col-end-10 p-4 rounded-xl my-4 mr-auto shadow-md">
-                                    <h3 class="font-bold text-lg mb-1">
-                                        {{ $log->created_at ? $log->created_at->format('Y.m.d H:i:s') : '-' }} -  {!! \App\Models\Form::LOG_LABEL[$log->description] !!}
-                                    </h3>
-                                    <p class="leading-tight text-justify">
+                    <div class="flex">
+                        <div class="col-start-5 col-end-6 mr-10 relative">
+                            <div class="h-full w-6 flex items-center justify-center">
+                                <div class="h-full w-1 bg-gray-300 dark:bg-gray-500 pointer-events-none"></div>
+                            </div>
+                            <div class="w-6 h-6 absolute top-1/2 -mt-3 rounded-full {{ \App\Models\Form::COLORS[$log->description] }} shadow"></div>
+                        </div>
+                        <div class="{{ \App\Models\Form::COLORS[$log->description] }} col-start-6 col-end-10 p-4 rounded-xl my-4 mr-auto shadow-md">
+                            <h3 class="font-bold text-lg mb-1">
+                                {{ $log->created_at->format('Y.m.d H:i:s') }} - {!! \App\Models\Form::LOG_LABEL[$log->description] !!}
+                            </h3>
+                            <p class="leading-tight text-justify">
+                                @foreach($log->changes['attributes'] as $key => $value)
+                                    @if($value && !in_array($key, ['id', 'users_id', 'teams_id', 'competitors_id', 'processed_by', 'payment_id', 'updated_at', 'updated_at']))
                                         @switch($key)
+                                            @case('sex')
+                                                <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($value == 'male') Férfi @elseif($value == 'femaile') Nő @endif <br>
+                                            @break
+                                            @case('privacy_policy')
+                                                <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($value == '1') Elfogadva @endif <br>
+                                            @break
+                                            @case('can_race')
+                                                <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($value == 1) Versenyezhet @elseif($value == 0) Nem versenyezhet @endif <br>
+                                            @break
+                                            @case('profile_photo')
+                                                <a href="/file/{{$value}}" target="_blank" class="underline">Feltöltött Profilkép</a>
+                                            @break
+                                            @case('data_sheet')
+                                                <a href="/file/{{$value}}" target="_blank" class="underline">Feltöltött Adatlap</a>
+                                            @break
                                             @case('sport_sheet')
-                                            <a href="/file/{{$value}}" target="_blank" class="underline">Sportorvosi</a>
+                                                <a href="/file/{{$value}}" target="_blank" class="underline">Feltöltött Sportorvosi</a>
                                             @break
                                             @case('license')
-                                            <a href="/license/{{$value}}" target="_blank" class="underline">Kiállított Engedély</a>
+                                                <a href="/license/{{$value}}" target="_blank" class="underline">Kiállított Engedély</a>
                                             @break
                                             @case('status')
-                                            <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($log->changes['old'][$key] ?? null) {!! \App\Models\Form::STATUS[$log->changes['old'][$key]] !!} -> @endif {!! \App\Models\Form::STATUS[$value] !!}
-                                            <br>
+                                                <div>
+                                                    <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($log->changes['old'][$key] ?? null) {!! \App\Models\Form::STATUS[$log->changes['old'][$key]] !!} -> @endif {!! \App\Models\Form::STATUS[$value] !!}
+                                                </div>
                                             @break
                                             @case('payment')
-                                            <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($log->changes['old'][$key] ?? null) {!! \App\Models\Form::PAYMENT[$log->changes['old'][$key]] !!} -> @endif {!! \App\Models\Form::PAYMENT[$value] !!}
-                                            <br>
+                                                <div>
+                                                    <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($log->changes['old'][$key] ?? null) {!! \App\Models\Form::PAYMENT[$log->changes['old'][$key]] !!} -> @endif {!! \App\Models\Form::PAYMENT[$value] !!}
+                                                </div>
                                             @break
                                             @default
-                                            <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: {{ ($log->changes['old'][$key] ?? null) ? $log->changes['old'][$key] . ' ->' : null }} {{ $value }} <br>
+                                                <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: {{ ($log->changes['old'][$key] ?? null) ? $log->changes['old'][$key] . ' ->' : null }} {{ $value }} <br>
                                             @break
                                         @endswitch
-                                    </p>
-                                </div>
-                            </div>
-                        @endif
-                    @endforeach
+                                    @endif
+                                @endforeach
+                            </p>
+                        </div>
+                    </div>
                 @endforeach
             @endif
         </div>

@@ -108,9 +108,9 @@ class Form extends Model
     ];
 
     const COLORS = [
-        'created' => 'bg-green-300 dark:bg-green-800 text-green-800 dark:text-green-100',
-        'updated' => 'bg-blue-300 dark:bg-blue-800 text-blue-800 dark:text-blue-100',
-        'deleted' => 'bg-red-300 dark:bg-red-800 text-red-800 dark:text-red-100',
+        'created' => 'bg-green-300 dark:bg-green-700 text-green-800 dark:text-green-100',
+        'updated' => 'bg-blue-300 dark:bg-blue-700 text-blue-800 dark:text-blue-100',
+        'deleted' => 'bg-red-300 dark:bg-red-700 text-red-800 dark:text-red-100',
     ];
 
     const LOG_LABEL = [

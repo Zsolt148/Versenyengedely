@@ -6,7 +6,7 @@ use App\Models\Form;
 use Illuminate\Http\Request;
 use Stripe\Checkout\Session;
 
-class formController extends Controller
+class FormController extends Controller
 {
     public function __construct() {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
@@ -18,7 +18,16 @@ class formController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        return view('coach.forms.index');
+
+        $formsCount = Form::query()
+            ->where('forms.teams_id', request()->user()->teams_id)
+            ->where('payment', null)
+            ->where('status', 'accepted')
+            ->count();
+
+        return view('coach.forms.index', [
+            'formsCount' => $formsCount
+        ]);
     }
 
     /**

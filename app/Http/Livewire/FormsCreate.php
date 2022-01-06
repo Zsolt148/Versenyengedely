@@ -57,10 +57,7 @@ class FormsCreate extends Component
 
         $comp = Competitor::findOrFail($this->form['competitors_id']);
 
-        if(Carbon::createFromFormat('Y', $comp->birth)->diffInYears(Carbon::now()) < 25) {
-            $this->addError('form.competitors_id', 'Nem lehet 25 év alatti a sportoló!');
-            return;
-        }
+        if($this->validateCompetitor($comp)) return;
 
         $form = Form::firstOrNew([
             'teams_id' => request()->user()->teams_id,
@@ -109,7 +106,10 @@ class FormsCreate extends Component
         $this->emit('saved');
     }
 
-    //finalization method
+    /**
+     * finalization method
+     * @return \Illuminate\Http\RedirectResponse|void
+     */
     public function final() {
         //save method
         $this->save();
@@ -117,6 +117,7 @@ class FormsCreate extends Component
         //validation
         $this->validate();
         if($this->validateFiles()) return; //break if one file missing
+        if($this->validateCompetitor(Competitor::findOrFail($this->form['competitors_id']))) return;
 
         $this->form->status = Form::STATUS_PENDING;
         $this->form->deny = null;
@@ -128,7 +129,10 @@ class FormsCreate extends Component
         return redirect()->route('coach.forms.index');
     }
 
-    //sport update
+    /**
+     * sport update
+     * @return \Illuminate\Http\RedirectResponse|void
+     */
     public function saveSport() {
         $this->process_file($this->form, 'sport_sheet');
 
@@ -145,7 +149,11 @@ class FormsCreate extends Component
         return redirect()->route('coach.forms.index');
     }
 
-    //file processing
+    /**
+     * file processing
+     * @param $form
+     * @param $file
+     */
     public function process_file($form, $file) {
         //dd($this->$file, $this->$file->isValid());
         if($this->$file && $this->$file->isValid()) { //ha feltolt
@@ -164,35 +172,55 @@ class FormsCreate extends Component
     }
 
     public function changedComp() {
+
         $this->resetValidation();
-        //teams_id - competitors_id - status-saved - payment-pending CHECK
-        //$query = Form::where([['teams_id', '=', request()->user()->teams_id], ['competitors_id', '=', $this->form['competitors_id']], ['status', '=', 'saved'], ['payment', '=', 'none']]);
 
-        //Ha megnyithato a form szerkesztesre akkor be tolti
-        $query = Form::query()
-            ->where('teams_id', '=', request()->user()->teams_id)
-            ->where('competitors_id', '=', $this->form['competitors_id'])
-            ->whereIn('status', [Form::STATUS_SAVED, Form::STATUS_DENIED, Form::STATUS_EXPIRED_FORM, Form::STATUS_EXPIRED_SPORT]);
+        if($comp = Competitor::find($this->form['competitors_id'])) {
 
-        if($query->exists()) {
-            $this->form = $query->first();
-            $this->nullFileUploads();
-        }else {
-            $comp = Competitor::find($this->form['competitors_id']);
+            //Ha megnyithato a form szerkesztesre akkor be tolti
+            $query = Form::query()
+                ->where('teams_id', '=', request()->user()->teams_id)
+                ->where('competitors_id', '=', $comp->id)
+                ->whereIn('status', [Form::STATUS_SAVED, Form::STATUS_DENIED, Form::STATUS_EXPIRED_FORM, Form::STATUS_EXPIRED_SPORT]);
 
-            $this->form = null;
-            $this->form['competitors_id'] = $comp->id;
-            $this->form['status'] = Form::STATUS_SAVED;
-            $this->nullFileUploads();
-
-            // ha 25 ev alatti - figyelmeztetes csak
-            if(Carbon::createFromFormat('Y', $comp->birth)->diffInYears(Carbon::now()) < 25) {
-                $this->addError('form.competitors_id', 'Nem lehet 25 év alatti a sportoló!');
-                return;
+            if($query->exists()) {
+                $this->form = $query->first();
+                $this->nullFileUploads();
+            }else {
+                $this->form = null;
+                $this->form['competitors_id'] = $comp->id;
+                $this->form['status'] = Form::STATUS_SAVED;
+                $this->nullFileUploads();
             }
+
+            if($this->validateCompetitor($comp)) return;
         }
+
     }
 
+    /**
+     * @param Competitor $competitor
+     * @return bool
+     */
+    private function validateCompetitor(Competitor $competitor) {
+        $error = false;
+
+        if(!$competitor->isRegistered()) {
+            $this->addError('form.competitors_id', 'Még nincs fizetve vagy regisztrálva a sportoló');
+            $error = true;
+        }
+
+        if(Carbon::createFromFormat('Y', $competitor->birth)->diffInYears(Carbon::now()) < 25) {
+            $this->addError('form.competitors_id', 'Nem lehet 25 év alatti a sportoló!');
+            $error = true;
+        }
+
+        return $error;
+    }
+
+    /**
+     * @return bool
+     */
     private function validateFiles() {
         $error = false;
         //ha barmelyik error igaz akkor failed

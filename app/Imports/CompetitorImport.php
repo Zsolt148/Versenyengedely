@@ -32,31 +32,39 @@ class CompetitorImport implements ToModel
         $team = $row[4];
 
         $team_id = null;
-        if (Team::where('name', 'like', '%' . $team . '%')->get()->isNotEmpty()) { //ha van egyesület
 
-            if(Carbon::createFromFormat('Y', $birth)->diffInYears(Carbon::now()) >= 25) { //ha tobb mint 25
-                $team_id = Team::where('name', 'like', '%' . $team . '%')->first()->id;
-                return Competitor::updateOrCreate(
-                    ['federal_reg_code' => $fed_reg],
-                    [
-                        'team_reg_code' => $team_reg,
-                        'name' => $name,
-                        'birth' => $birth,
-                        'teams_id' => $team_id,
-                    ]
-                );
-            }else {
-                Log::info('Under 25 years: ' . $fed_reg . ' - ' . $name . ' - ' . $birth . ' - ' . $team);
-                $this->youngComps->push(
-                    ['federal_reg_code' => $fed_reg, 'name' => $name, 'birth' => $birth, 'team' => $team]
-                );
-            }
-        }else {
-            Log::debug('Missing competitor: ' . $fed_reg . ' - ' . $name .  ' - ' . $birth . ' - ' . $team);
+        if (Team::where('name', 'like', '%' . $team . '%')->get()->isEmpty()) {
+
+            Log::debug('Missing competitors team: ' . $fed_reg . ' - ' . $name .  ' - ' . $birth . ' - ' . $team);
             $this->missingComps->push(
                 ['federal_reg_code' => $fed_reg, 'name' => $name, 'birth' => $birth, 'team' => $team]
             );
+
+            return null;
         }
+
+        if(Carbon::createFromFormat('Y', $birth)->diffInYears(Carbon::now()) < 25) {
+
+            Log::info('Under 25 years: ' . $fed_reg . ' - ' . $name . ' - ' . $birth . ' - ' . $team);
+            $this->youngComps->push(
+                ['federal_reg_code' => $fed_reg, 'name' => $name, 'birth' => $birth, 'team' => $team]
+            );
+
+            return null;
+        }
+
+        $team_id = Team::where('name', 'like', '%' . $team . '%')->first()->id;
+
+        return Competitor::updateOrCreate(
+            ['federal_reg_code' => $fed_reg],
+            [
+                'is_registered' => true,
+                'team_reg_code' => $team_reg,
+                'name' => $name,
+                'birth' => $birth,
+                'teams_id' => $team_id,
+            ]
+        );
     }
 
     public function getYoungComps() {

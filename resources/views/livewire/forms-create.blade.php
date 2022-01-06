@@ -21,7 +21,7 @@
                 <x-jet-label for="competitors_id" value="Sportoló*"/>
                 <select class="mt-1 block w-full rounded-md shadow-md border-2 dark:bg-gray-700 focus:outline-none" name="competitors_id" id="group" wire:model.defer="form.competitors_id" wire:change="changedComp">
                     <option value="">Válassz</option>
-                    @foreach(Auth::user()->competitors as $c)
+                    @foreach(Auth::user()->competitors()->orderBy('name')->get() as $c)
                         <option value="{{ $c->id }}">{{ $c->name }} - {{ $c->birth }} - {{ $c->federal_reg_code }}</option>
                     @endforeach
                 </select>
@@ -284,45 +284,45 @@
                         </h3>
                         <p class="leading-tight text-justify">
                             @foreach($log->changes['attributes'] as $key => $value)
-                        @if($value && !in_array($key, ['id', 'users_id', 'teams_id', 'competitors_id', 'processed_by', 'payment_id', 'updated_at', 'updated_at']))
-                            @switch($key)
-                                @case('sex')
-                                    <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($value == 'male') Férfi @elseif($value == 'femaile') Nő @endif <br>
-                                @break
-                                @case('privacy_policy')
-                                    <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($value == '1') Elfogadva @endif <br>
-                                @break
-                                @case('can_race')
-                                    <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($value == 1) Versenyezhet @elseif($value == 0) Nem versenyezhet @endif <br>
-                                @break
-                                @case('profile_photo')
-                                    <a href="/file/{{$value}}" target="_blank" class="underline">Feltöltött Profilkép</a>
-                                @break
-                                    @case('data_sheet')
-                                    <a href="/file/{{$value}}" target="_blank" class="underline">Feltöltött Adatlap</a>
-                                @break
-                                @case('sport_sheet')
-                                    <a href="/file/{{$value}}" target="_blank" class="underline">Feltöltött Sportorvosi</a>
-                                @break
-                                @case('license')
-                                    <a href="/license/{{$value}}" target="_blank" class="underline">Kiállított Engedély</a>
-                                @break
-                                @case('status')
-                                    <div>
-                                        <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($log->changes['old'][$key] ?? null) {!! \App\Models\Form::STATUS[$log->changes['old'][$key]] !!} -> @endif {!! \App\Models\Form::STATUS[$value] !!}
-                                    </div>
-                                @break
-                                @case('payment')
-                                    <div>
-                                        <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($log->changes['old'][$key] ?? null) {!! \App\Models\Form::PAYMENT[$log->changes['old'][$key]] !!} -> @endif {!! \App\Models\Form::PAYMENT[$value] !!}
-                                    </div>
-                                @break
-                                @default
-                                    <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: {{ ($log->changes['old'][$key] ?? null) ? $log->changes['old'][$key] . ' ->' : null }} {{ $value }} <br>
-                                @break
-                            @endswitch
-                        @endif
-                    @endforeach
+                                @if($value && !in_array($key, ['id', 'users_id', 'teams_id', 'competitors_id', 'processed_by', 'payment_id', 'updated_at', 'updated_at']))
+                                    @switch($key)
+                                        @case('sex')
+                                            <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($value == 'male') Férfi @elseif($value == 'femaile') Nő @endif <br>
+                                        @break
+                                        @case('privacy_policy')
+                                            <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($value == '1') Elfogadva @endif <br>
+                                        @break
+                                        @case('can_race')
+                                            <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($value == 1) Versenyezhet @elseif($value == 0) Nem versenyezhet @endif <br>
+                                        @break
+                                        @case('profile_photo')
+                                            <a href="/file/{{$value}}" target="_blank" class="underline">Feltöltött Profilkép</a>
+                                        @break
+                                            @case('data_sheet')
+                                            <a href="/file/{{$value}}" target="_blank" class="underline">Feltöltött Adatlap</a>
+                                        @break
+                                        @case('sport_sheet')
+                                            <a href="/file/{{$value}}" target="_blank" class="underline">Feltöltött Sportorvosi</a>
+                                        @break
+                                        @case('license')
+                                            <a href="/license/{{$value}}" target="_blank" class="underline">Kiállított Engedély</a>
+                                        @break
+                                        @case('status')
+                                            <div>
+                                                <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($log->changes['old'][$key] ?? null) {!! \App\Models\Form::STATUS[$log->changes['old'][$key]] !!} -> @endif {!! \App\Models\Form::STATUS[$value] !!}
+                                            </div>
+                                        @break
+                                        @case('payment')
+                                            <div>
+                                                <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: @if($log->changes['old'][$key] ?? null) {!! \App\Models\Form::PAYMENT[$log->changes['old'][$key]] !!} -> @endif {!! \App\Models\Form::PAYMENT[$value] !!}
+                                            </div>
+                                        @break
+                                        @default
+                                            <span class="font-bold">{{ \App\Models\Form::LOGS[$key] }}</span>: {{ ($log->changes['old'][$key] ?? null) ? $log->changes['old'][$key] . ' ->' : null }} {{ $value }} <br>
+                                        @break
+                                    @endswitch
+                                @endif
+                            @endforeach
                         </p>
                     </div>
                 </div>

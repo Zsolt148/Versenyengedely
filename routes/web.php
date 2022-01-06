@@ -1,5 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\CompetitorController;
+use App\Http\Controllers\Admin\FormController as AdminFormController;
+use App\Http\Controllers\Admin\TeamController;
+use App\Http\Controllers\ExportController;
+use App\Http\Controllers\FormController;
+use App\Http\Controllers\VerifyEmailController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -7,12 +14,12 @@ Route::get('/', function () {
 })->middleware('guest');
 
 //Email verification
-Route::get('/email/verify', function (\Illuminate\Http\Request $request) {
+Route::get('/email/verify', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return view('auth.verify-email');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.notice');
 
-Route::get('/email/verify/{id}/{hash}', [\App\Http\Controllers\VerifyEmailController::class, '__invoke'])
+Route::get('/email/verify/{id}/{hash}', VerifyEmailController::class)
     ->middleware(['signed', 'throttle:6,1'])
     ->name('verification.verify');
 
@@ -27,43 +34,50 @@ Route::get('/license/test', function () {
 */
 //auth group
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+
     Route::view('dashboard', 'dashboard')->name('dashboard');
+
     //organizer group
     Route::middleware(['checkType:organizer'])->prefix('organizer')->name('organizer.')->group(function () {
         Route::view('forms', 'organizer.forms')->name('forms');
     });
 
     Route::middleware(['checkType:coach'])->prefix('coach')->name('coach.')->group(function () {
-        Route::get('/forms/success', [\App\Http\Controllers\formController::class, 'success']);
-        Route::get('/forms/cart', [\App\Http\Controllers\formController::class, 'cart'])->name('forms.cart');
-        Route::post('/forms/checkout', [\App\Http\Controllers\formController::class, 'checkout'])->name('forms.checkout');
-        Route::resource('forms', \App\Http\Controllers\formController::class);
-        Route::get('licences', [\App\Http\Controllers\formController::class, 'licences'])->name('licences');
-        Route::get('payments', [\App\Http\Controllers\formController::class, 'payments'])->name('payments');
+
+        Route::get('/forms/success', [FormController::class, 'success']);
+        Route::get('/forms/cart', [FormController::class, 'cart'])->name('forms.cart');
+        Route::post('/forms/checkout', [FormController::class, 'checkout'])->name('forms.checkout');
+
+        Route::get('licences', [FormController::class, 'licences'])->name('licences');
+        Route::get('payments', [FormController::class, 'payments'])->name('payments');
+
+        Route::resource('forms', FormController::class);
     });
 
     //Admin group
     Route::middleware(['checkType:admin'])->prefix('admin')->name('admin.')->group(function () {
-        //Route::resource('teams', \App\Http\Controllers\Admin\teamController::class);
-        Route::get('teams', [\App\Http\Controllers\Admin\teamController::class, 'index'])->name('teams.index');
-        Route::get('competitors', [\App\Http\Controllers\Admin\competitorController::class, 'index'])->name('competitors.index');
-        Route::get('forms', [\App\Http\Controllers\Admin\formController::class, 'index'])->name('forms.index');
-        Route::get('forms/edit', [\App\Http\Controllers\Admin\formController::class, 'edit'])->name('forms.edit');
 
-        Route::get('forms/export', [\App\Http\Controllers\ExportController::class, 'adminForms'])->name('forms.export');
+        Route::get('teams', [TeamController::class, 'index'])->name('teams.index');
+
+        Route::get('competitors', [CompetitorController::class, 'index'])->name('competitors.index');
+        Route::post('competitorsUpload', [CompetitorController::class, 'upload'])->name('competitorsUpload');
+
+        Route::get('forms', [AdminFormController::class, 'index'])->name('forms.index');
+        Route::get('forms/edit', [AdminFormController::class, 'edit'])->name('forms.edit');
+
+        Route::get('forms/export', [ExportController::class, 'adminForms'])->name('forms.export');
     });
 
     //Super group
     Route::middleware(['checkType:super'])->prefix('super')->name('super.')->group(function () {
+
         Route::view('users', 'super.users')->name('users');
         Route::view('payments', 'super.payments')->name('payments');
 
-        Route::get('payments/export', [\App\Http\Controllers\ExportController::class, 'superPayments'])->name('payments.export');
+        Route::get('payments/export', [ExportController::class, 'superPayments'])->name('payments.export');
     });
 });
 
-//competitors import
-Route::post('competitorsUpload', [\App\Http\Controllers\Admin\competitorController::class, 'upload'])->name('competitorsUpload');
 //stripe webhook
 Route::stripeWebhooks('stripe-webhook');
 

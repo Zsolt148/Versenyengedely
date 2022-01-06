@@ -83,11 +83,25 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Payment::class, 'users_id');
     }
 
+    const USER = 'user';
+    const ORGANIZER = 'organizer';
+    const COACH = 'coach';
+    const ADMIN = 'admin';
+    const SUPER = 'super';
+
     const TYPES = [
-        'user' => 'Felhasználó',
-        'organizer' => 'Rendező',
-        'coach' => 'Csapatvezető',
-        'admin' => 'Admin',
-        'super' => 'Super',
+        self::USER => 'Felhasználó',
+        self::ORGANIZER => 'Rendező',
+        self::COACH => 'Csapatvezető',
+        self::ADMIN => 'Admin',
+        self::SUPER => 'Super',
     ];
+
+    public function isUser() {
+        return $this->type === self::USER;
+    }
+
+    public function isSuper() {
+        return $this->type === self::SUPER;
+    }
 }

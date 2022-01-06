@@ -10,7 +10,7 @@
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-4 dark:bg-gray-600">
                 @livewire('admin.competitors')
             </div>
-            @if(auth()->user()->type == 'super')
+            @if(auth()->user()->isSuper())
                 <x-jet-section-border/>
                 <div class="bg-white shadow overflow-hidden sm:rounded-md p-4 dark:bg-gray-600">
                     <div class="text-lg my-4">
@@ -50,12 +50,13 @@
                         </tr>
                         </thead>
                     </table>
-                    <form action="{{ route('competitorsUpload') }}" method="post" enctype="multipart/form-data"
+                    <form action="{{ route('admin.competitorsUpload') }}" method="post" enctype="multipart/form-data"
                           class="my-4 w-1/2">
                         @csrf
+                        @method('POST')
                         <div class="grid grid-cols-6">
                             <div class="col-span-3">
-                                <x-jet-label for="file" value="{{ __('Fájl (.xlsx vagy .csv)') }}"/>
+                                <x-jet-label for="file" value="{{ __('Fájl (.csv vagy .txt)') }}"/>
                                 <input type="file" class="custom-file-input" id="file" name="file"
                                        aria-describedby="input" lang="hu-hu" required>
                             </div>
