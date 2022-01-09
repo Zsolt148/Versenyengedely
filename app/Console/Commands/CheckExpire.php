@@ -46,7 +46,7 @@ class CheckExpire extends Command
         //expired sports
         $expired_sport = Form::query()
             ->where('status', Form::STATUS_ACCEPTED)
-            ->where('sport_valid', '<', now()->format('Y-m-d'))
+            ->whereDate('sport_valid', '<', now()->format('Y-m-d'))
             ->with('user')
             ->get();
 
@@ -64,17 +64,21 @@ class CheckExpire extends Command
             $form->sport_sheet = null;
             $form->save();
             $users[$form->user->id] = $form->user->name; //groupby
+
         }
+
 
         foreach($users as $id => $form) {
             $user = User::find($id);
             Mail::to($user)->queue(new ExpiredSport($user));
         }
 
+        $this->info('Sent ' . count($expired_sport) . ' expired sport forms to ' . count($users) . ' users');
+
         //expired forms
         $expired_form = Form::query()
-            ->whereIn('status', [Form::STATUS_ACCEPTED, Form::STATUS_EXPIRED_FORM])
-            ->where('form_valid', '<', now()->format('Y-m-d'))
+            ->where('status', Form::STATUS_ACCEPTED)
+            ->whereDate('form_valid', '<', now()->format('Y-m-d'))
             ->with('user')
             ->get();
 
@@ -96,6 +100,8 @@ class CheckExpire extends Command
             $user = User::find($id);
             Mail::to($user)->queue(new ExpiredForm($user)); //groupby
         }
+
+        $this->info('Sent ' . count($expired_form) . ' expired forms to ' . count($users) . ' users');
 
         return 0;
     }
