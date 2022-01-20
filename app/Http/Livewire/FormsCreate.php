@@ -206,7 +206,7 @@ class FormsCreate extends Component
         $error = false;
 
         if(!$competitor->isRegistered()) {
-            $this->addError('form.competitors_id', 'Még nincs fizetve vagy regisztrálva a sportoló');
+            $this->addError('form.competitors_id', 'A sportoló még nincs regisztrálva, illetve nincs befizetve a regisztrációs díj');
             $error = true;
         }
 
