@@ -46,6 +46,7 @@
                             <th class="border-gray-300 border p-3 font-bold bg-gray-100 dark:bg-gray-500 text-gray-700 dark:text-white">Egyesületi regisztrációs kód*</th>
                             <th class="border-gray-300 border p-3 font-bold bg-gray-100 dark:bg-gray-500 text-gray-700 dark:text-white">Teljes név*</th>
                             <th class="border-gray-300 border p-3 font-bold bg-gray-100 dark:bg-gray-500 text-gray-700 dark:text-white">Születési éve*</th>
+                            <th class="border-gray-300 border p-3 font-bold bg-gray-100 dark:bg-gray-500 text-gray-700 dark:text-white">Neme*</th>
                             <th class="border-gray-300 border p-3 font-bold bg-gray-100 dark:bg-gray-500 text-gray-700 dark:text-white">Egyesület*</th>
                         </tr>
                         </thead>

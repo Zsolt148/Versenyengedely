@@ -29,7 +29,8 @@ class CompetitorImport implements ToModel
         $team_reg = $row[1];
         $name = $row[2];
         $birth = $row[3];
-        $team = $row[4];
+        $sex = $row[4];
+        $team = $row[5];
 
         $team_id = null;
 
@@ -62,6 +63,7 @@ class CompetitorImport implements ToModel
                 'team_reg_code' => $team_reg,
                 'name' => $name,
                 'birth' => $birth,
+                'sex' => $sex,
                 'teams_id' => $team_id,
             ]
         );

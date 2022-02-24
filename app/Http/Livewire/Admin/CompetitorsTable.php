@@ -22,6 +22,7 @@ class CompetitorsTable extends LivewireDatatable
             Column::name('team_reg_code')->label('Egyesületi kód')->searchable()->alignCenter(),
             Column::name('name')->label('Név')->searchable()->alignCenter(),
             Column::name('birth')->label('Születési év')->searchable()->alignCenter(),
+            Column::name('sex')->label('Nem')->searchable()->alignCenter(),
             Column::name('team.name')->label('Egyesület')->searchable(),
         ];
     }
