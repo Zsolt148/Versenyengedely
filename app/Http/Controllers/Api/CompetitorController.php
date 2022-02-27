@@ -18,8 +18,9 @@ class CompetitorController extends Controller
     {
         return Competitor::query()
             ->registered()
+            ->whereNotNull('sex')
             ->with('team')
-            ->get(['id', 'name', 'birth', 'teams_id', 'created_at'])
+            ->get(['id', 'name', 'birth', 'sex', 'teams_id', 'created_at'])
             ->map(fn (Competitor $competitor) => [
                 'id' => $competitor->id,
                 'name' => $competitor->name,
