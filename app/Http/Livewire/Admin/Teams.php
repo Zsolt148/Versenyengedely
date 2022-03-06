@@ -32,6 +32,7 @@ class Teams extends Component
                     'name' => $team['name'],
                     'address' => $team['address'],
                     'webpage' => $team['webpage'],
+                    'deleted_at' => $team['deleted_at'],
                 ]
             );
         }
