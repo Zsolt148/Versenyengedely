@@ -24,17 +24,24 @@ class Teams extends Component
 
         $teams = $response->json();
 
-        foreach($teams as $team) {
-            Team::updateOrCreate(
-                [
-                    'SA' => $team['SA'],
-                ], [
-                    'name' => $team['name'],
-                    'address' => $team['address'],
-                    'webpage' => $team['webpage'],
-                    'deleted_at' => $team['deleted_at'],
-                ]
-            );
+        foreach($teams as $data) {
+
+            /** @var Team $team */
+            $team = Team::query()
+                ->withTrashed()
+                ->where('SA', $data['SA'])
+                ->first();
+
+            if(!$team) {
+                $team = new Team(['SA' => $data['SA']]);
+            }
+
+            $team->name = $data['original_name'];
+            $team->address = $data['address'];
+            $team->webpage = $data['webpage'];
+            $team->deleted_at = $data['deleted_at'];
+
+            $team->save();
         }
 
         session()->flash('status', 'Sikeres szinkronizálás');
